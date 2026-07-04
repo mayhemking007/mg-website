@@ -75,9 +75,6 @@ export function Header({
           <Link href="/#studio" className="transition-colors hover:text-white">
             Studio
           </Link>
-          <Link href="/docs" className="transition-colors hover:text-white">
-            Docs
-          </Link>
         </nav>
         <Link className="btn-secondary h-10 px-3 text-sm sm:px-4" href={ctaHref}>
           {ctaLabel} <ArrowRight className="h-4 w-4" />
@@ -215,7 +212,7 @@ export function DocsSidebar({
     <aside className="docs-sidebar hidden max-h-[calc(100vh-120px)] overflow-y-auto p-2 lg:block">
       <div className="mb-3 flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white">
         <FileText className="h-4 w-4 text-sky-300" />
-        Docs
+        Documentation
       </div>
       <nav className="grid gap-5 text-sm">
         {navGroups.map((group) => (
