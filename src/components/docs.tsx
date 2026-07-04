@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CircleDot } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { OnThisPage } from "@/components/on-this-page";
@@ -27,20 +27,21 @@ export function DocsFrame({
 }) {
   return (
     <main className="site-shell">
-      <Header ctaHref="/docs/quick-start" ctaLabel="Quick Start" />
+      <Header ctaHref="/docs/quick-start" ctaLabel="Quick Start" ctaVariant="primary" />
 
-      <div className="docs-layout mx-auto grid max-w-[1500px] gap-7 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,820px)] lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,820px)_220px]">
+      <div className="docs-layout mx-auto grid max-w-[1500px] gap-8 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,820px)] lg:gap-10 lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,820px)_220px] xl:gap-12">
         <div>
           <DocsSidebar groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
           <MobileDocsNav groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
         </div>
 
-        <article className="min-w-0">{children}</article>
+        <article className="min-w-0">
+          {children}
+          <Footer contained />
+        </article>
 
         <OnThisPage sections={tocSections} />
       </div>
-
-      <Footer />
     </main>
   );
 }
@@ -92,7 +93,7 @@ export function DocsArticle({ page }: { page: DocPage }) {
               <div className="mt-5 grid gap-3 text-base leading-7 text-slate-300">
                 {section.bullets.map((item) => (
                   <div key={item} className="flex gap-3">
-                    <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-300" />
+                    <CircleDot className="mt-1.5 h-4 w-4 shrink-0 text-emerald-300" />
                     <span>{renderInlineCode(item)}</span>
                   </div>
                 ))}
@@ -109,9 +110,9 @@ export function DocsArticle({ page }: { page: DocPage }) {
           </section>
         ))}
 
-        <nav className="grid gap-4 py-10 sm:grid-cols-2">
+        <nav className="grid gap-4 pb-10 pt-16 sm:grid-cols-2">
           {adjacent.previous ? (
-            <Link className="panel flex items-center gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.previous.href}>
+            <Link className="panel docs-pager-link flex items-center gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.previous.href}>
               <ArrowLeft className="h-4 w-4 text-sky-300" />
               <span>
                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Previous</span>
@@ -122,7 +123,7 @@ export function DocsArticle({ page }: { page: DocPage }) {
             <span />
           )}
           {adjacent.next ? (
-            <Link className="panel flex items-center justify-between gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.next.href}>
+            <Link className="panel docs-pager-link flex items-center justify-between gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.next.href}>
               <span>
                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Next</span>
                 {adjacent.next.label}
@@ -137,6 +138,52 @@ export function DocsArticle({ page }: { page: DocPage }) {
 }
 
 function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["diagram"]> }) {
+  if (type === "intro-graph") {
+    return (
+      <div className="docs-diagram docs-graph-diagram" aria-label="MemoGrafter memory graph diagram">
+        <svg className="docs-graph-svg" viewBox="0 0 760 340" role="img">
+          <title>MemoGrafter stores memory as connected nodes and edges</title>
+          <line className="docs-graph-edge docs-graph-edge-green" x1="196" y1="149" x2="300" y2="109" />
+          <line className="docs-graph-edge docs-graph-edge-blue" x1="196" y1="191" x2="300" y2="231" />
+          <line className="docs-graph-edge docs-graph-edge-amber" x1="403" y1="97" x2="541" y2="115" />
+          <line className="docs-graph-edge docs-graph-edge-blue" x1="404" y1="250" x2="540" y2="250" />
+          {/* <line className="docs-graph-edge docs-graph-edge-green" x1="590" y1="170" x2="590" y2="200" /> */}
+          <line className="docs-graph-edge docs-graph-edge-muted" x1="350" y1="144" x2="350" y2="196" />
+          <line className="docs-graph-edge docs-graph-edge-amber" x1="184" y1="278" x2="297" y2="259" />
+
+          <g className="docs-graph-node" transform="translate(140 170)">
+            <circle r="60" />
+            <text y="-7">Message</text>
+            <text y="14">buffer</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 90)">
+            <circle r="54" />
+            <text y="-7">Topic</text>
+            <text y="14">node</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 250)">
+            <circle r="54" />
+            <text y="-7">Topic</text>
+            <text y="14">node</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 120)">
+            <circle r="50" />
+            <text y="5">Memory</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 250)">
+            <circle r="50" />
+            <text y="3">Memory</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-graft" transform="translate(140 285)">
+            <circle r="45" />
+            <text y="-7">Graft</text>
+            <text y="14">Node</text>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
   const diagrams = {
     "memory-graph": ["Messages", "Segments", "Topic nodes", "Memory nodes", "Graph edges"],
     "invoke-flow": ["invoke()", "Recall facts", "LLM response", "Background ingest", "Graph memory"],

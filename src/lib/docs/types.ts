@@ -8,7 +8,13 @@ export type DocSection = {
   body?: string[];
   bullets?: string[];
   code?: DocCodeBlock[];
-  diagram?: "memory-graph" | "invoke-flow" | "ingestion-flow" | "graft-flow" | "lifecycle-flow";
+  diagram?:
+    | "intro-graph"
+    | "memory-graph"
+    | "invoke-flow"
+    | "ingestion-flow"
+    | "graft-flow"
+    | "lifecycle-flow";
 };
 
 export type DocPage = {

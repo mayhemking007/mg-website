@@ -49,9 +49,11 @@ type DocsNavGroup = {
 export function Header({
   ctaHref = "/docs",
   ctaLabel = "Docs",
+  ctaVariant = "secondary",
 }: {
   ctaHref?: string;
   ctaLabel?: string;
+  ctaVariant?: "primary" | "secondary";
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080b0d]/85 backdrop-blur-xl">
@@ -76,7 +78,10 @@ export function Header({
             Studio
           </Link>
         </nav>
-        <Link className="btn-secondary h-10 px-3 text-sm sm:px-4" href={ctaHref}>
+        <Link
+          className={`${ctaVariant === "primary" ? "btn-primary" : "btn-secondary"} h-10 px-3 text-sm sm:px-4`}
+          href={ctaHref}
+        >
           {ctaLabel} <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -84,22 +89,35 @@ export function Header({
   );
 }
 
-export function Footer() {
+export function Footer({ contained = false }: { contained?: boolean } = {}) {
   return (
-    <footer className="border-t border-white/10 px-5 py-8 text-sm text-slate-500 sm:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <footer
+      className={
+        contained
+          ? "mt-16 border-t border-white/10 py-8 text-sm text-slate-500"
+          : "relative z-30 border-t border-white/10 bg-[#080b0d] px-5 py-8 text-sm text-slate-500 sm:px-8"
+      }
+    >
+      <div
+        className={
+          contained
+            ? "grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
+            : "mx-auto grid max-w-7xl gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
+        }
+      >
         <Link href="/" className="flex items-center gap-2 text-slate-300">
           <MemoryStick className="h-4 w-4 text-emerald-300" />
           MemoGrafter
         </Link>
-        <div className="flex flex-wrap gap-4">
-          <Link href="/docs" className="transition-colors hover:text-slate-200">
+        <p className="text-center text-slate-400">Created with ❤️, © 2026</p>
+        <div className="flex flex-wrap gap-4 sm:justify-end">
+          <Link href="/docs" className="transition-colors hover:text-emerald-200">
             Docs
           </Link>
-          <Link href="/#api" className="transition-colors hover:text-slate-200">
+          <Link href="/#api" className="transition-colors hover:text-emerald-200">
             API
           </Link>
-          <Link href="/#studio" className="transition-colors hover:text-slate-200">
+          <Link href="/#studio" className="transition-colors hover:text-emerald-200">
             Studio
           </Link>
         </div>
@@ -209,7 +227,7 @@ export function DocsSidebar({
   const navGroups = groups ?? [{ title: "Docs", items }];
 
   return (
-    <aside className="docs-sidebar hidden max-h-[calc(100vh-120px)] overflow-y-auto p-2 lg:block">
+    <aside className="docs-sidebar hidden max-h-[calc(100vh-140px)] overflow-y-auto py-2 pl-2 pr-4 lg:block">
       <div className="mb-3 flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white">
         <FileText className="h-4 w-4 text-sky-300" />
         Documentation

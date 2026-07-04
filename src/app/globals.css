@@ -105,6 +105,13 @@ samp {
   border-color: rgba(125, 211, 252, 0.2);
 }
 
+.docs-pager-link:hover {
+  border-color: rgba(110, 231, 183, 0.62);
+  background:
+    linear-gradient(180deg, rgba(110, 231, 183, 0.14), rgba(110, 231, 183, 0.07)),
+    var(--surface);
+}
+
 .btn-primary,
 .btn-secondary,
 .btn-ghost {
@@ -142,8 +149,8 @@ samp {
 }
 
 .btn-secondary:hover {
-  border-color: rgba(125, 211, 252, 0.42);
-  background: rgba(125, 211, 252, 0.08);
+  border-color: rgba(110, 231, 183, 0.42);
+  background: rgba(110, 231, 183, 0.08);
 }
 
 .btn-ghost {
@@ -185,8 +192,8 @@ samp {
 }
 
 .code-copy-button:hover {
-  border-color: rgba(125, 211, 252, 0.32);
-  background: rgba(125, 211, 252, 0.08);
+  border-color: rgba(110, 231, 183, 0.32);
+  background: rgba(110, 231, 183, 0.08);
   color: #ffffff;
 }
 
@@ -414,6 +421,64 @@ samp {
   transform: rotate(45deg);
   border-right: 1px solid rgba(125, 211, 252, 0.78);
   border-top: 1px solid rgba(125, 211, 252, 0.78);
+}
+
+.docs-graph-diagram {
+  min-width: 0;
+}
+
+.docs-graph-svg {
+  display: block;
+  min-width: 640px;
+  width: 100%;
+  height: auto;
+}
+
+.docs-graph-edge {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.docs-graph-edge-green {
+  stroke: rgba(110, 231, 183, 0.72);
+}
+
+.docs-graph-edge-blue {
+  stroke: rgba(125, 211, 252, 0.66);
+}
+
+.docs-graph-edge-amber {
+  stroke: rgba(252, 211, 77, 0.68);
+}
+
+.docs-graph-edge-muted {
+  stroke: rgba(148, 163, 184, 0.34);
+  stroke-dasharray: 5 7;
+}
+
+.docs-graph-node circle {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(125, 211, 252, 0.26);
+}
+
+.docs-graph-node text {
+  dominant-baseline: middle;
+  fill: #e2e8f0;
+  font-size: 15px;
+  font-weight: 650;
+  text-anchor: middle;
+}
+
+.docs-graph-node-topic circle {
+  stroke: rgba(110, 231, 183, 0.36);
+}
+
+.docs-graph-node-memory circle {
+  stroke: rgba(125, 211, 252, 0.38);
+}
+
+.docs-graph-node-graft circle {
+  stroke: rgba(252, 211, 77, 0.36);
 }
 
 @media (max-width: 639px) {

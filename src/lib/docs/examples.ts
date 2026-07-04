@@ -6,9 +6,7 @@ export const migrateCode = `npx memo-grafter migrate`;
 
 export const studioCode = `npx memo-grafter studio`;
 
-export const quickStartCode = `${installCode}
-${initCode}
-${migrateCode}`;
+export const quickStartCode = `npx install memo-grafter`;
 
 export const minimalAgentCode = `import "dotenv/config";
 

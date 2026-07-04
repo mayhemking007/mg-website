@@ -21,13 +21,13 @@ export const docsPages: DocPage[] = [
         title: "What MemoGrafter is",
         body: [
           "MemoGrafter is a server-side TypeScript memory framework for chatbot applications. It stores message buffers, topic segments, topic nodes, memory nodes, graph edges, and graft provenance so applications can recall and transfer context without stuffing every old message into the prompt.",
-          "The public docs are beginner-first: start with a working chatbot memory loop, understand the graph, then move into recall, grafting, Studio, and internals.",
         ],
+        diagram: "intro-graph",
       },
       {
-        title: "What it is not",
+        title: "Why MemoGrafter",
         body: [
-          "MemoGrafter is not an autonomous agent runtime. It does not run tools, schedule work, or decide goals for an agent. It gives your application memory infrastructure: ingestion, retrieval, grafting, graph persistence, maintenance, fleet support, CLI setup, and local inspection tooling.",
+          "Chatbot memory becomes hard to manage when every session is treated as a flat transcript. MemoGrafter turns conversation history into structured graph memory so applications can recall relevant facts, preserve provenance, and move useful context between sessions without replaying everything.",
         ],
       },
       {
