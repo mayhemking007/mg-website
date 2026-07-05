@@ -206,6 +206,25 @@ samp {
   scrollbar-color: rgba(125, 211, 252, 0.36) rgba(255, 255, 255, 0.04);
 }
 
+.code-highlight pre {
+  margin: 0;
+  min-width: max-content;
+  background: transparent !important;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+.code-highlight code {
+  display: block;
+  min-width: max-content;
+  font-family: inherit;
+}
+
+.code-highlight .line {
+  display: block;
+  min-height: 1.75em;
+}
+
 @media (min-width: 640px) {
   .code-scroll {
     padding: 20px;
@@ -432,11 +451,14 @@ samp {
   min-width: 640px;
   width: 100%;
   height: auto;
+  overflow: visible;
 }
 
 .docs-graph-edge {
+  opacity: 0.76;
   stroke-width: 2;
   stroke-linecap: round;
+  animation: docs-graph-edge-breathe 4.8s ease-in-out infinite;
 }
 
 .docs-graph-edge-green {
@@ -453,12 +475,24 @@ samp {
 
 .docs-graph-edge-muted {
   stroke: rgba(148, 163, 184, 0.34);
-  stroke-dasharray: 5 7;
+  stroke-dasharray: 6 7;
+  animation-duration: 5.8s;
 }
 
-.docs-graph-node circle {
+.docs-graph-ring {
+  fill: transparent;
+  opacity: 0;
+  stroke-width: 1;
+  animation: docs-graph-ring-pulse 4.8s ease-out infinite;
+}
+
+.docs-graph-node circle:not(.docs-graph-ring) {
   fill: rgba(255, 255, 255, 0.04);
   stroke: rgba(125, 211, 252, 0.26);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: docs-graph-node-pulse 5.6s ease-in-out infinite;
 }
 
 .docs-graph-node text {
@@ -469,16 +503,55 @@ samp {
   text-anchor: middle;
 }
 
-.docs-graph-node-topic circle {
+.docs-graph-node-topic circle:not(.docs-graph-ring) {
   stroke: rgba(110, 231, 183, 0.36);
+  animation-delay: 0.7s;
 }
 
-.docs-graph-node-memory circle {
+.docs-graph-node-memory circle:not(.docs-graph-ring) {
   stroke: rgba(125, 211, 252, 0.38);
+  animation-delay: 1.4s;
 }
 
-.docs-graph-node-graft circle {
+.docs-graph-node-graft circle:not(.docs-graph-ring) {
   stroke: rgba(252, 211, 77, 0.36);
+  animation-delay: 2.1s;
+}
+
+.docs-graph-node-topic .docs-graph-ring {
+  stroke: rgba(110, 231, 183, 0.42);
+  animation-delay: 0.5s;
+}
+
+.docs-graph-node-memory .docs-graph-ring {
+  stroke: rgba(125, 211, 252, 0.42);
+  animation-delay: 1s;
+}
+
+.docs-graph-node-graft .docs-graph-ring {
+  stroke: rgba(252, 211, 77, 0.42);
+  animation-delay: 1.5s;
+}
+
+.docs-graph-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.docs-graph-node:hover .docs-graph-tooltip {
+  opacity: 1;
+}
+
+.docs-graph-tooltip rect {
+  fill: rgba(8, 11, 13, 0.94);
+  stroke: rgba(255, 255, 255, 0.14);
+}
+
+.docs-graph-tooltip text {
+  fill: #dbeafe;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 @media (max-width: 639px) {
@@ -501,7 +574,54 @@ samp {
   }
 }
 
+@keyframes docs-graph-edge-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    stroke-width: 2;
+  }
+
+  50% {
+    opacity: 0.95;
+    stroke-width: 2.6;
+  }
+}
+
+@keyframes docs-graph-node-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(125, 211, 252, 0));
+    transform: scale(1);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 10px rgba(110, 231, 183, 0.18));
+    transform: scale(1.015);
+  }
+}
+
+@keyframes docs-graph-ring-pulse {
+  0% {
+    opacity: 0.18;
+    transform: scale(1);
+  }
+
+  70% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .docs-graph-ring {
+    display: none;
+  }
+
   *,
   *::before,
   *::after {

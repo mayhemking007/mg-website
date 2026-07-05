@@ -1,12 +1,10 @@
 import type { DocPage } from "./types";
 import { docsNavItems } from "./nav";
 import {
-  flowCode,
   initCode,
   installCode,
   migrateCode,
   minimalAgentCode,
-  quickStartCode,
   studioCode,
 } from "./examples";
 export const docsPages: DocPage[] = [
@@ -22,27 +20,13 @@ export const docsPages: DocPage[] = [
         body: [
           "MemoGrafter is a server-side TypeScript memory framework for chatbot applications. It stores message buffers, topic segments, topic nodes, memory nodes, graph edges, and graft provenance so applications can recall and transfer context without stuffing every old message into the prompt.",
         ],
-        diagram: "intro-graph",
       },
       {
         title: "Why MemoGrafter",
         body: [
           "Chatbot memory becomes hard to manage when every session is treated as a flat transcript. MemoGrafter turns conversation history into structured graph memory so applications can recall relevant facts, preserve provenance, and move useful context between sessions without replaying everything.",
         ],
-      },
-      {
-        title: "Install",
-        code: [{ label: "terminal", code: quickStartCode }],
-      },
-      {
-        title: "Learn in order",
-        bullets: [
-          "Add memory to a TypeScript chatbot in 5 minutes.",
-          "Understand messages, segments, topic nodes, memory nodes, graph edges, and grafting.",
-          "Use recall and grafting in your own agent loop.",
-          "Inspect memory in Studio.",
-          "Go deeper into internals only when you need contributor-level detail.",
-        ],
+        diagram: "intro-graph",
       },
     ],
   },
@@ -54,27 +38,6 @@ export const docsPages: DocPage[] = [
       "Install MemoGrafter, initialize the project files, migrate the database, and run a minimal MemoGrafterAgent.",
     sections: [
       {
-        title: "Install MemoGrafter",
-        body: [
-          "Install the `memo-grafter` package from npm. This adds the runtime APIs, CLI, adapters, and storage contracts to your TypeScript project.",
-        ],
-        code: [{ label: "terminal", code: installCode }],
-      },
-      {
-        title: "Initialize MemoGrafter",
-        body: [
-          "`init` creates MemoGrafter-owned project files under `src/memo-grafter/`, including generated configuration and schema entry points.",
-        ],
-        code: [{ label: "terminal", code: initCode }],
-      },
-      {
-        title: "Run migrations",
-        body: [
-          "`migrate` creates or updates MemoGrafter-owned `mg_*` tables and PostgreSQL extensions. Your application schema stays in your existing migration workflow.",
-        ],
-        code: [{ label: "terminal", code: migrateCode }],
-      },
-      {
         title: "Minimal agent",
         body: [
           "Use `MemoGrafterAgent` when you want the simplest chatbot-facing API. It handles invoke-time recall, response generation, and background ingestion.",
@@ -84,7 +47,6 @@ export const docsPages: DocPage[] = [
       {
         title: "What happens",
         diagram: "invoke-flow",
-        code: [{ label: "flow", code: flowCode }],
         bullets: [
           "`invoke()` answers the current user message using recent raw history and any available recalled memory.",
           "Background ingestion turns conversation turns into topic segments, topic nodes, memory nodes, and graph edges.",
@@ -151,10 +113,15 @@ export const docsPages: DocPage[] = [
         code: [
           {
             label: ".env",
-            code: `DATABASE_URL=postgres://postgres:postgres@localhost:5432/memo_grafter
+            code: `# MemoGrafter stores graph memory in PostgreSQL.
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/memo_grafter
+
+# Add only the providers your adapters use.
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 GEMINI_API_KEY=...
+
+# Required only for queue mode or recall caching.
 REDIS_URL=redis://localhost:6379`,
           },
         ],
@@ -190,7 +157,8 @@ REDIS_URL=redis://localhost:6379`,
         code: [
           {
             label: "types.ts",
-            code: `export interface Message {
+            code: `// Messages preserve the original chat turn before graph memory is derived.
+export interface Message {
   role: "system" | "user" | "assistant";
   content: string;
 }`,
@@ -426,8 +394,11 @@ active memory facts -> maintenance notes -> token-budgeted prompt` }],
         code: [
           {
             label: "ingest.ts",
-            code: `await agent.ingestText(editorContent, {
+            code: `// Ingest text directly when there is no assistant response to generate.
+await agent.ingestText(editorContent, {
+  // Replace previous imported content from the same source when re-syncing.
   replace: true,
+  // Label and source make Studio/audits easier to read later.
   label: "Morning entry",
   source: "classic-editor",
 });`,
@@ -457,13 +428,16 @@ active memory facts -> maintenance notes -> token-budgeted prompt` }],
         code: [
           {
             label: "recall.ts",
-            code: `const result = await agent.recall("deployment config", {
+            code: `// Search graph memory for facts related to the current task.
+const result = await agent.recall("deployment config", {
   limit: 8,
   minSimilarity: 0.55,
+  // Keep the generated memory prompt within your model budget.
   tokenBudget: 1000,
   tags: ["project:memo-grafter"],
 });
 
+// facts are structured records; systemPrompt is ready to inject into an LLM call.
 console.log(result.facts);
 console.log(result.systemPrompt);`,
           },
@@ -492,9 +466,11 @@ console.log(result.systemPrompt);`,
         code: [
           {
             label: "graft.ts",
-            code: `const graft = await agent.graft();
+            code: `// Preview transferable memory as prompt context.
+const graft = await agent.graft();
 console.log(graft.systemPrompt);
 
+// Narrow the graft to topics relevant to a specific handoff.
 const selected = await agent.graftByRelevance("authentication discussion", {
   topK: 5,
   minSimilarity: 0.6,
@@ -508,7 +484,8 @@ const selected = await agent.graftByRelevance("authentication discussion", {
         code: [
           {
             label: "absorb.ts",
-            code: `await targetAgent.absorbFromAgent(sourceAgent, {
+            code: `// Copy selected active memory from one agent/session into another.
+await targetAgent.absorbFromAgent(sourceAgent, {
   query: "travel preferences",
   topK: 3,
 });`,
@@ -559,8 +536,10 @@ const selected = await agent.graftByRelevance("authentication discussion", {
   db: { connectionString: process.env.DATABASE_URL! },
   llm,
   embedder,
+  // Queue mode moves ingestion work to Redis/BullMQ.
   queue: {
     redisUrl: process.env.REDIS_URL!,
+    // Keep queues tidy after each job settles.
     removeOnComplete: true,
     removeOnFail: true,
   },
@@ -590,15 +569,18 @@ const selected = await agent.graftByRelevance("authentication discussion", {
         code: [
           {
             label: "fleet.ts",
-            code: `const fleet = new MemoGrafterFleet(config, {
+            code: `// A fleet shares memory between related worker agents.
+const fleet = new MemoGrafterFleet(config, {
   id: "support-fleet",
   defaultWorkerMemory: "both",
 });
 
 await fleet.initialize();
+// Store a shared fact once so multiple workers can recall it.
 await fleet.ingestToFleet("Refund policy: customers can request a refund within 30 days.");
 
 const support = await fleet.createWorker({ color: "support" });
+// Workers can search local memory, shared memory, or both.
 const recall = await support.recall("refund policy", { memory: "both" });`,
           },
         ],
@@ -627,12 +609,14 @@ const recall = await support.recall("refund policy", { memory: "both" });`,
             label: "adapters.ts",
             code: `import type { EmbedAdapter, LLMAdapter, Message } from "memo-grafter";
 
+// Implement this interface to route completions to your provider of choice.
 class MyLLMAdapter implements LLMAdapter {
   async complete(messages: Message[], system?: string): Promise<string> {
     return "Assistant response";
   }
 }
 
+// Embeddings must return vectors compatible with your storage backend.
 class MyEmbedAdapter implements EmbedAdapter {
   async embed(text: string): Promise<number[]> {
     return [];
@@ -681,13 +665,16 @@ class MyEmbedAdapter implements EmbedAdapter {
   db: { connectionString: process.env.DATABASE_URL! },
   llm,
   embedder,
+  // Drift controls when a run of messages becomes a new topic segment.
   drift: {
     mode: "intent",
     driftSensitivity: "medium",
     minSegmentMessages: 3,
     reentryDetection: true,
   },
+  // Graph expansion decides how far recall/grafting can walk related topics.
   graph: { topK: 5, hopDepth: 2 },
+  // Injection controls how much memory is placed into the LLM prompt.
   inject: {
     bufferSize: 4,
     tokenBudget: 1500,

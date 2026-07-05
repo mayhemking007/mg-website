@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { CopyCodeButton } from "@/components/copy-code-button";
+import { highlightCode, inferCodeLanguage } from "@/lib/code-highlight";
 
 type FeatureCardProps = {
   icon: LucideIcon;
@@ -157,15 +158,20 @@ export function FeatureCard({ icon: Icon, title, text, compact }: FeatureCardPro
   );
 }
 
-export function CodeBlock({
+export async function CodeBlock({
   code,
   label,
+  language,
   id,
 }: {
   code: string;
   label: string;
+  language?: string;
   id?: string;
 }) {
+  const codeLanguage = inferCodeLanguage(label, language);
+  const highlightedCode = await highlightCode(code, codeLanguage);
+
   return (
     <div id={id} className="code-panel">
       <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-3">
@@ -182,9 +188,7 @@ export function CodeBlock({
         </div>
         <CopyCodeButton code={code} />
       </div>
-      <pre className="code-scroll">
-        <code>{code}</code>
-      </pre>
+      <div className="code-scroll code-highlight" dangerouslySetInnerHTML={{ __html: highlightedCode }} />
     </div>
   );
 }

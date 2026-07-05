@@ -1,6 +1,7 @@
 export type DocCodeBlock = {
   code: string;
   label: string;
+  language?: string;
 };
 
 export type DocSection = {

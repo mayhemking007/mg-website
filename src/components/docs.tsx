@@ -103,7 +103,12 @@ export function DocsArticle({ page }: { page: DocPage }) {
             {section.code ? (
               <div className="mt-6 grid gap-4">
                 {section.code.map((block) => (
-                  <CodeBlock key={`${section.title}-${block.label}`} label={block.label} code={block.code} />
+                  <CodeBlock
+                    key={`${section.title}-${block.label}`}
+                    label={block.label}
+                    code={block.code}
+                    language={block.language}
+                  />
                 ))}
               </div>
             ) : null}
@@ -141,43 +146,71 @@ function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["
   if (type === "intro-graph") {
     return (
       <div className="docs-diagram docs-graph-diagram" aria-label="MemoGrafter memory graph diagram">
-        <svg className="docs-graph-svg" viewBox="0 0 760 340" role="img">
-          <title>MemoGrafter stores memory as connected nodes and edges</title>
+        <svg className="docs-graph-svg" viewBox="0 0 760 340" aria-hidden="true">
           <line className="docs-graph-edge docs-graph-edge-green" x1="196" y1="149" x2="300" y2="109" />
           <line className="docs-graph-edge docs-graph-edge-blue" x1="196" y1="191" x2="300" y2="231" />
           <line className="docs-graph-edge docs-graph-edge-amber" x1="403" y1="97" x2="541" y2="115" />
           <line className="docs-graph-edge docs-graph-edge-blue" x1="404" y1="250" x2="540" y2="250" />
-          {/* <line className="docs-graph-edge docs-graph-edge-green" x1="590" y1="170" x2="590" y2="200" /> */}
           <line className="docs-graph-edge docs-graph-edge-muted" x1="350" y1="144" x2="350" y2="196" />
           <line className="docs-graph-edge docs-graph-edge-amber" x1="184" y1="278" x2="297" y2="259" />
 
           <g className="docs-graph-node" transform="translate(140 170)">
+            <circle className="docs-graph-ring" r="60" />
             <circle r="60" />
             <text y="-7">Message</text>
             <text y="14">buffer</text>
+            <g className="docs-graph-tooltip" transform="translate(-104 -108)">
+              <rect width="208" height="34" rx="7" />
+              <text x="104" y="18">Keeps raw conversation turns</text>
+            </g>
           </g>
           <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 90)">
+            <circle className="docs-graph-ring" r="54" />
             <circle r="54" />
             <text y="-7">Topic</text>
             <text y="14">node</text>
+            <g className="docs-graph-tooltip" transform="translate(-119 -102)">
+              <rect width="238" height="34" rx="7" />
+              <text x="119" y="18">Stores the broader topic</text>
+            </g>
           </g>
           <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 250)">
+            <circle className="docs-graph-ring" r="54" />
             <circle r="54" />
             <text y="-7">Topic</text>
             <text y="14">node</text>
+            <g className="docs-graph-tooltip" transform="translate(-119 -102)">
+              <rect width="238" height="34" rx="7" />
+              <text x="119" y="18">Stores the broader topic</text>
+            </g>
           </g>
           <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 120)">
+            <circle className="docs-graph-ring" r="50" />
             <circle r="50" />
             <text y="5">Memory</text>
+            <g className="docs-graph-tooltip" transform="translate(-276 -17)">
+              <rect width="224" height="34" rx="7" />
+              <text x="112" y="18">Stores one atomic memory</text>
+            </g>
           </g>
           <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 250)">
+            <circle className="docs-graph-ring" r="50" />
             <circle r="50" />
             <text y="3">Memory</text>
+            <g className="docs-graph-tooltip" transform="translate(-276 -17)">
+              <rect width="224" height="34" rx="7" />
+              <text x="112" y="18">Stores one atomic memory</text>
+            </g>
           </g>
           <g className="docs-graph-node docs-graph-node-graft" transform="translate(140 285)">
+            <circle className="docs-graph-ring" r="45" />
             <circle r="45" />
             <text y="-7">Graft</text>
             <text y="14">Node</text>
+            <g className="docs-graph-tooltip" transform="translate(-116 -94)">
+              <rect width="232" height="34" rx="7" />
+              <text x="116" y="18">Preserves copied-memory origin</text>
+            </g>
           </g>
         </svg>
       </div>

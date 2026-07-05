@@ -2,11 +2,11 @@ import type { DocNavGroup } from "./types";
 
 export const docsNavGroups: DocNavGroup[] = [
   {
-    title: "Docs",
+    title: "Getting Started",
     items: [
       { href: "/docs", label: "Introduction" },
-      { href: "/docs/quick-start", label: "Quick Start" },
       { href: "/docs/installation", label: "Installation" },
+      { href: "/docs/quick-start", label: "Quick Start" },
       { href: "/docs/environment-setup", label: "Environment Setup" },
     ],
   },

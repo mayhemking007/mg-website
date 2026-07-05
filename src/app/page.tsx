@@ -77,8 +77,13 @@ const useCases = [
   "Internal workflow bots that preserve project and role-specific context",
 ];
 
-const installSnippet = `npm install memo-grafter
+const installSnippet = `# Install the runtime package.
+npm install memo-grafter
+
+# Generate local MemoGrafter config and schema files.
 npx memo-grafter init
+
+# Create MemoGrafter-owned database tables.
 npx memo-grafter migrate`;
 
 const apiSnippet = `import {
@@ -88,16 +93,20 @@ const apiSnippet = `import {
 } from "memo-grafter";
 
 const agent = new MemoGrafterAgent({
+  // MemoGrafter stores durable graph memory in PostgreSQL.
   db: { connectionString: process.env.DATABASE_URL! },
+  // The LLM answers; the embedder makes stored memory searchable.
   llm: new OpenAILLMAdapter("gpt-4o"),
   embedder: new OpenAIEmbedAdapter("text-embedding-3-small"),
 });
 
 await agent.initialize();
 
+// invoke() responds immediately and schedules memory ingestion.
 await agent.invoke("I am planning a Japan trip.");
 await agent.invoke("I like quiet towns and local cafes.");
 
+// recall() pulls relevant graph memory back into future turns.
 const recall = await agent.recall("travel preferences");
 console.log(recall.facts);`;
 
