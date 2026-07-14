@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MemoGrafter | Graph-native memory for TypeScript agents",
+  title: "MemoGrafter | Lifecycle-managed memory for AI agents",
   description:
-    "MemoGrafter extracts, stores, reviews, and grafts durable memory into chatbot and agent workflows.",
+    "Structured, versioned memory for TypeScript agents with lifecycle controls, graph-native recall, CLI tooling, and Studio.",
 };
 
 export default function RootLayout({

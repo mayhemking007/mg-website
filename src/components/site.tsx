@@ -51,10 +51,12 @@ export function Header({
   ctaHref = "/docs",
   ctaLabel = "Docs",
   ctaVariant = "secondary",
+  githubUrl,
 }: {
   ctaHref?: string;
   ctaLabel?: string;
   ctaVariant?: "primary" | "secondary";
+  githubUrl?: string;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080b0d]/85 backdrop-blur-xl">
@@ -65,19 +67,18 @@ export function Header({
           </span>
           <span className="text-base font-semibold">MemoGrafter</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-          <Link href="/#why" className="transition-colors hover:text-white">
-            Why
+        <nav aria-label="Primary navigation" className="hidden items-center gap-5 text-sm text-slate-300 md:flex">
+          <Link href="/#features" className="transition-colors hover:text-white">
+            Features
           </Link>
-          <Link href="/#pipeline" className="transition-colors hover:text-white">
-            Pipeline
-          </Link>
-          <Link href="/#api" className="transition-colors hover:text-white">
-            API
+          <Link href="/#how-it-works" className="transition-colors hover:text-white">
+            How it works
           </Link>
           <Link href="/#studio" className="transition-colors hover:text-white">
             Studio
           </Link>
+          <Link href="/docs" className="transition-colors hover:text-white">Docs</Link>
+          {githubUrl ? <a href={githubUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-white">GitHub</a> : null}
         </nav>
         <Link
           className={`${ctaVariant === "primary" ? "btn-primary" : "btn-secondary"} h-10 px-3 text-sm sm:px-4`}
@@ -90,7 +91,7 @@ export function Header({
   );
 }
 
-export function Footer({ contained = false }: { contained?: boolean } = {}) {
+export function Footer({ contained = false, githubUrl }: { contained?: boolean; githubUrl?: string } = {}) {
   return (
     <footer
       className={
@@ -121,6 +122,7 @@ export function Footer({ contained = false }: { contained?: boolean } = {}) {
           <Link href="/#studio" className="transition-colors hover:text-emerald-200">
             Studio
           </Link>
+          {githubUrl ? <a href={githubUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-emerald-200">GitHub</a> : null}
         </div>
       </div>
     </footer>
