@@ -1,6 +1,8 @@
-import { ArrowRight, Check, GitBranch, Search, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, GitBranch } from "lucide-react";
 import Link from "next/link";
+import { DifferenceSection } from "@/components/difference-section";
 import { InstallCommand } from "@/components/install-command";
+import { HowItWorksSection } from "@/components/how-it-works-section";
 import { MemoryLifecycleVisual } from "@/components/memory-lifecycle-visual";
 import { CodeBlock, Footer, Header, SectionHeading } from "@/components/site";
 
@@ -20,7 +22,6 @@ const agent = new MemoGrafterAgent({
 
 await agent.initialize();
 await agent.invoke("I prefer quiet areas in Kyoto.");
-
 const memory = await agent.recall("Japan travel preferences");
 console.log(memory.facts);`;
 
@@ -32,21 +33,12 @@ const capabilities = [
   "PostgreSQL + pgvector",
 ];
 
-const lifecycle = [
-  ["Extracted", "A candidate fact is identified."],
-  ["Active", "The fact is eligible for recall."],
-  ["Updated", "New information changes the fact."],
-  ["Superseded", "The earlier version stays inspectable."],
-  ["Decayed", "Relevance can reduce over time."],
-  ["Pruned", "Lifecycle rules remove noise."],
-];
-
 export default function Home() {
   return (
     <main className="site-shell">
       <Header githubUrl={githubUrl} />
 
-      <section className="hero-section border-b border-white/10">
+      <section id="home" className="hero-section scroll-mt-20 border-b border-white/10">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 lg:min-h-[calc(100vh-76px)] lg:grid-cols-[0.9fr_1.1fr] lg:py-14">
           <div className="max-w-2xl">
             <p className="eyebrow">Lifecycle-managed memory for AI agents</p>
@@ -82,47 +74,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="how-it-works" className="site-section scroll-mt-24">
-        <SectionHeading eyebrow="How it works" title="From conversation to useful context" text="A focused pipeline turns raw dialogue into memory that can change without losing its history." />
-        <div className="how-grid mt-12">
-          {[
-            ["01", "Extract", "Convert conversations into topics and atomic memories."],
-            ["02", "Evolve", "Detect conflicts, version facts, supersede stale information, and apply lifecycle rules."],
-            ["03", "Recall", "Retrieve only relevant active memories and graft them into the agent context."],
-          ].map(([number, title, text]) => (
-            <article className="how-step" key={title}>
-              <span className="how-number">{number}</span>
-              <h3 className="mt-5 text-xl font-semibold text-white">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-400">{text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <HowItWorksSection />
 
-      <section id="features" className="border-y border-white/10 bg-white/[0.018] scroll-mt-24">
-        <div className="site-section">
-          <SectionHeading eyebrow="The difference" title="Memory is not just stored. It changes." text="MemoGrafter treats changing knowledge as a lifecycle, not an ever-growing pile of retrieval chunks." />
-          <div className="mt-12 grid gap-4 lg:grid-cols-2">
-            <ComparisonPanel title="Traditional memory storage" muted items={["Stores chunks", "Accumulates duplicates", "Returns stale facts", "Offers limited inspection"]} />
-            <ComparisonPanel title="MemoGrafter" items={["Extracts atomic memories", "Connects related knowledge", "Versions changing facts", "Detects conflicts", "Supports operator review", "Retrieves active, relevant memory"]} />
-          </div>
-        </div>
-      </section>
+      <DifferenceSection />
 
-      <section className="site-section">
-        <SectionHeading eyebrow="Memory lifecycle" title="Every fact has a history" text="Memories are not blindly deleted. State changes keep active recall clean while historical evolution remains available for inspection." />
-        <ol className="lifecycle-track mt-12">
-          {lifecycle.map(([title, text], index) => (
-            <li className="lifecycle-step" key={title}>
-              <div className="lifecycle-marker"><span>{index + 1}</span></div>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="border-y border-white/10 bg-[#090d10]">
+      <section className="code-environment border-y border-white/10">
         <div className="site-section grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
           <div>
             <SectionHeading align="left" eyebrow="TypeScript-first" title="A small API for the whole memory loop" text="Initialize an agent, process conversation turns, and recall prompt-ready graph memory with typed server-side primitives." />
@@ -130,17 +86,18 @@ export default function Home() {
               <span className="tech-pill">Typed adapters</span><span className="tech-pill">CLI workflows</span><span className="tech-pill">Inspectable recall</span>
             </div>
             <p className="mt-7 text-sm leading-6 text-slate-500">Launch the local inspector when you need it: <code className="text-slate-300">npx memo-grafter studio</code></p>
+            <Link className="api-docs-link" href="/docs/quick-start">View full example in the docs <ArrowRight className="h-4 w-4" /></Link>
           </div>
           <CodeBlock label="agent.ts" code={apiSnippet} />
         </div>
       </section>
 
-      <section id="studio" className="site-section scroll-mt-24">
+      <section id="studio" className="studio-environment site-section scroll-mt-24">
         <div className="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
           <div>
             <SectionHeading align="left" eyebrow="MemoGrafter Studio" title="Inspect and operate on memory" text="Search topics, review facts, inspect lifecycle history, resolve conflicts, and preview exactly what reaches the model." />
             <div className="mt-8 grid gap-3 text-sm text-slate-300">
-              {["Trace each memory to its topic and source", "Review lifecycle changes before they affect recall", "Preview the exact token-budgeted context"].map((item) => <div className="flex gap-3" key={item}><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />{item}</div>)}
+              {["Trace each memory to its topic and source", "Active recall stays clean while older versions remain available for review", "Preview the exact token-budgeted context"].map((item) => <div className="flex gap-3" key={item}><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />{item}</div>)}
             </div>
           </div>
           <StudioPreview />
@@ -163,10 +120,6 @@ export default function Home() {
       <Footer githubUrl={githubUrl} />
     </main>
   );
-}
-
-function ComparisonPanel({ title, items, muted = false }: { title: string; items: string[]; muted?: boolean }) {
-  return <article className={`comparison-panel ${muted ? "comparison-muted" : "comparison-active"}`}><div className="flex items-center gap-3"><span className="comparison-icon">{muted ? <Search className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}</span><h3 className="text-xl font-semibold text-white">{title}</h3></div><ul className="mt-7 grid gap-3 sm:grid-cols-2">{items.map((item) => <li className="flex items-center gap-3 text-sm text-slate-300" key={item}><span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />{item}</li>)}</ul></article>;
 }
 
 function StudioPreview() {

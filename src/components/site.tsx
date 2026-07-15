@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { LandingNavigation } from "@/components/landing-navigation";
 import { CopyCodeButton } from "@/components/copy-code-button";
 import { highlightCode, inferCodeLanguage } from "@/lib/code-highlight";
 
@@ -58,6 +59,8 @@ export function Header({
   ctaVariant?: "primary" | "secondary";
   githubUrl?: string;
 }) {
+  if (githubUrl) return <LandingNavigation githubUrl={githubUrl} />;
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080b0d]/85 backdrop-blur-xl">
       <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
@@ -137,13 +140,13 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
-      <p className="text-sm font-medium uppercase tracking-[0.18em] text-emerald-300">
+      <p className="text-sm font-medium uppercase leading-5 tracking-[0.18em] text-emerald-300">
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-balance text-3xl font-semibold leading-tight text-white sm:text-4xl">
+      <h2 className="mt-3 text-balance text-[clamp(2.25rem,3.5vw,3.5rem)] font-semibold leading-[1.12] text-white">
         {title}
       </h2>
-      <p className="mt-4 text-pretty text-base leading-7 text-slate-400 sm:text-lg">{text}</p>
+      <p className="mt-4 text-pretty text-[clamp(1.05rem,1.2vw,1.2rem)] leading-[1.65] text-slate-300">{text}</p>
     </div>
   );
 }
