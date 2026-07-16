@@ -12,6 +12,7 @@
   --accent-blue: #7dd3fc;
   --accent-amber: #fcd34d;
   --danger: #fca5a5;
+  --memory-lifecycle-animation-duration: 5s;
 }
 
 @theme inline {
@@ -371,34 +372,34 @@ samp {
 
 .visual-toolbar { position: absolute; z-index: 4; top: 0; right: 0; left: 0; display: flex; height: 48px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(8,11,13,.86); padding: 0 16px; color: #64748b; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; backdrop-filter: blur(8px); }
 .visual-live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent-green); box-shadow: 0 0 0 4px rgba(110,231,183,.1); }
-.incoming-message { position: absolute; z-index: 5; top: 67px; left: 22px; width: 245px; border: 1px solid rgba(125,211,252,.2); border-radius: 8px; background: #0e171d; padding: 11px 13px; animation: message-cycle 14s ease-in-out infinite; }
+.incoming-message { position: absolute; z-index: 5; top: 67px; left: 22px; width: 245px; border: 1px solid rgba(125,211,252,.2); border-radius: 8px; background: #0e171d; padding: 11px 13px; animation: message-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
 .incoming-message span { color: #7dd3fc; font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .incoming-message p { margin-top: 5px; color: #dbeafe; font-size: .75rem; }
 .memory-edges { position: absolute; z-index: 0; inset: 48px 0 0; width: 100%; height: calc(100% - 48px); }
-.memory-edges .edge { fill: none; stroke: rgba(110,231,183,.42); stroke-width: 1.5; stroke-dasharray: 6 6; vector-effect: non-scaling-stroke; animation: lifecycle-edge 14s ease-in-out infinite; }
+.memory-edges .edge { fill: none; stroke: rgba(110,231,183,.42); stroke-width: 1.5; stroke-dasharray: 6 6; vector-effect: non-scaling-stroke; animation: lifecycle-edge var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
 .memory-edges .edge-muted { stroke: rgba(148,163,184,.2); }
 .memory-edges .edge-updated { stroke: rgba(252,211,77,.48); animation-delay: -5s; }
-.memory-edges .edge-context { stroke: rgba(125,211,252,.48); opacity: 0; animation: context-edge 14s ease-in-out infinite; }
+.memory-edges .edge-context { stroke: rgba(125,211,252,.48); opacity: 0; animation: context-edge var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
 .memory-edges .edge-context-2 { animation-delay: .35s; }
 .memory-card { position: absolute; z-index: 2; display: grid; width: 145px; gap: 5px; border: 1px solid rgba(125,211,252,.2); border-radius: 8px; background: #0d151a; padding: 12px; color: #e2e8f0; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,.2); transition: border-color 160ms ease, filter 160ms ease, transform 160ms ease; }
 .memory-card:hover, .memory-card:focus-visible { z-index: 8; border-color: rgba(110,231,183,.65); filter: brightness(1.13); transform: translateY(-2px); }
 .memory-card strong { font-size: .75rem; line-height: 1.35; }
 .memory-card small { color: #64748b; font-size: .65rem; }
 .card-kind { color: #6ee7b7; font-size: .58rem; font-weight: 700; letter-spacing: .15em; }
-.topic-card { top: 225px; left: 36px; width: 168px; border-color: rgba(110,231,183,.35); background: #0b1915; animation: topic-cycle 14s ease-in-out infinite; }
-.memory-quiet { top: 133px; left: 51%; animation: memory-cycle 14s ease-in-out infinite; }
-.memory-kyoto { top: 230px; left: 51%; animation: memory-cycle 14s ease-in-out .35s infinite; }
-.memory-old { top: 327px; left: 51%; opacity: .48; filter: grayscale(.45); animation: supersede-cycle 14s ease-in-out infinite; }
-.memory-new { top: 405px; left: 39%; width: 175px; border-color: rgba(252,211,77,.35); animation: update-cycle 14s ease-in-out infinite; }
+.topic-card { top: 225px; left: 36px; width: 168px; border-color: rgba(110,231,183,.35); background: #0b1915; animation: topic-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
+.memory-quiet { top: 133px; left: 51%; animation: memory-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
+.memory-kyoto { top: 230px; left: 51%; animation: memory-cycle var(--memory-lifecycle-animation-duration) ease-in-out .25s infinite; }
+.memory-old { top: 327px; left: 51%; opacity: .48; filter: grayscale(.45); animation: supersede-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
+.memory-new { top: 405px; left: 39%; width: 175px; border-color: rgba(252,211,77,.35); animation: update-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
 .status-badge { width: max-content; border: 1px solid; border-radius: 999px; padding: 2px 6px; font-size: .55rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
 .status-badge.active { border-color: rgba(110,231,183,.25); background: rgba(110,231,183,.08); color: #a7f3d0; }
 .status-badge.updated { border-color: rgba(252,211,77,.28); background: rgba(252,211,77,.08); color: #fde68a; }
 .status-badge.superseded { border-color: rgba(148,163,184,.2); background: rgba(148,163,184,.06); color: #94a3b8; }
-.agent-context { position: absolute; z-index: 3; right: 22px; top: 227px; width: 142px; border: 1px solid rgba(125,211,252,.26); border-radius: 8px; background: #0c151c; padding: 12px; animation: context-cycle 14s ease-in-out infinite; }
+.agent-context { position: absolute; z-index: 3; right: 22px; top: 227px; width: 142px; border: 1px solid rgba(125,211,252,.26); border-radius: 8px; background: #0c151c; padding: 12px; animation: context-cycle var(--memory-lifecycle-animation-duration) ease-in-out infinite; }
 .agent-context p { margin-top: 8px; border-left: 2px solid rgba(110,231,183,.4); padding-left: 7px; color: #cbd5e1; font-size: .62rem; line-height: 1.4; }
 .visual-prompt { position: absolute; z-index: 4; right: 22px; bottom: 20px; left: 22px; border-top: 1px solid var(--border); padding-top: 12px; color: #94a3b8; font-family: var(--font-geist-mono); font-size: .68rem; }
 .visual-prompt span { margin-right: 8px; color: #7dd3fc; }
-.retrieval-pulse { position: absolute; z-index: 1; top: 170px; left: 46%; display: grid; width: 225px; height: 225px; place-items: center; border: 1px solid rgba(125,211,252,.25); border-radius: 999px; color: rgba(125,211,252,.7); font-size: .62rem; opacity: 0; animation: retrieval-cycle 14s ease-out infinite; }
+.retrieval-pulse { position: absolute; z-index: 1; top: 170px; left: 46%; display: grid; width: 225px; height: 225px; place-items: center; border: 1px solid rgba(125,211,252,.25); border-radius: 999px; color: rgba(125,211,252,.7); font-size: .62rem; opacity: 0; animation: retrieval-cycle var(--memory-lifecycle-animation-duration) ease-out infinite; }
 .retrieval-pulse span { position: absolute; inset: 18px; border: 1px solid rgba(125,211,252,.15); border-radius: inherit; }
 
 .landing-header { position: sticky; z-index: 40; top: 0; border-bottom: 1px solid rgba(255,255,255,.09); background: rgba(8,11,13,.86); backdrop-filter: blur(16px); }
@@ -794,7 +795,7 @@ samp {
 
 /* Interactive How It Works pipeline */
 .pipeline-experience { width: min(100%, 1280px); margin: 26px auto 0; }
-.horizontal-pipeline { display: grid; align-items: stretch; gap: 8px; }
+.horizontal-pipeline { display: grid; align-items: center; gap: 8px; }
 .pipeline-box { position: relative; z-index: 1; min-width: 0; border: 1px solid rgba(255,255,255,.09); border-top: 2px solid rgba(255,255,255,.11); border-radius: 8px; background: #0d1316; padding: 14px; transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease, transform 220ms ease; }
 .pipeline-box:hover { z-index: 4; border-color: rgba(110,231,183,.32); box-shadow: 0 16px 38px rgba(0,0,0,.28); transform: scale(1.035); }
 .pipeline-box[data-active="true"] { border-top-color: #6ee7b7; background: #0e1716; }
@@ -807,7 +808,7 @@ samp {
 @keyframes connector-pulse { to { stroke-dashoffset: -74; } }
 
 @media (min-width: 1100px) {
-  .horizontal-pipeline { grid-template-columns: 25fr 3fr 22fr 3fr 29fr 3fr 26fr; }
+  .horizontal-pipeline { grid-template-columns: 22fr 3fr 20fr 3fr 31fr 3fr 27fr; }
 }
 
 @media (min-width: 768px) and (max-width: 1099px) {
