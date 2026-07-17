@@ -114,7 +114,7 @@ export function Footer({ contained = false, githubUrl }: { contained?: boolean; 
           <MemoryStick className="h-4 w-4 text-emerald-300" />
           MemoGrafter
         </Link>
-        <p className="text-center text-slate-400">Created with ❤️, © 2026</p>
+        <p className="text-center text-slate-400">Created with ❤️ © 2026</p>
         <div className="flex flex-wrap gap-4 sm:justify-end">
           <Link href="/docs" className="transition-colors hover:text-emerald-200">
             Docs

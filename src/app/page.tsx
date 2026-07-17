@@ -8,20 +8,13 @@ import { CodeBlock, Footer, Header, SectionHeading } from "@/components/site";
 
 const githubUrl = "https://github.com/mayhemking007/memo-grafter";
 
-const apiSnippet = `import {
-  MemoGrafterAgent,
-  OpenAIEmbedAdapter,
-  OpenAILLMAdapter,
-} from "memo-grafter";
-
-const agent = new MemoGrafterAgent({
-  db: { connectionString: process.env.DATABASE_URL! },
-  llm: new OpenAILLMAdapter("gpt-4o"),
-  embedder: new OpenAIEmbedAdapter("text-embedding-3-small"),
-});
-
+const apiSnippet = `import { MemoGrafterAgent } from "memo-grafter";
+// Create an agent
+const agent = new MemoGrafterAgent({ /* config */ });
 await agent.initialize();
+// Learn from conversations
 await agent.invoke("I prefer quiet areas in Kyoto.");
+// Recall relevant memory
 const memory = await agent.recall("Japan travel preferences");
 console.log(memory.facts);`;
 
@@ -79,16 +72,21 @@ export default function Home() {
       <DifferenceSection />
 
       <section className="code-environment border-y border-white/10">
-        <div className="site-section grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-          <div>
-            <SectionHeading align="left" eyebrow="TypeScript-first" title="A small API for the whole memory loop" text="Initialize an agent, process conversation turns, and recall prompt-ready graph memory with typed server-side primitives." />
-            <div className="mt-7 flex flex-wrap gap-3">
-              <span className="tech-pill">Typed adapters</span><span className="tech-pill">CLI workflows</span><span className="tech-pill">Inspectable recall</span>
-            </div>
-            <p className="mt-7 text-sm leading-6 text-slate-500">Launch the local inspector when you need it: <code className="text-slate-300">npx memo-grafter studio</code></p>
-            <Link className="api-docs-link" href="/docs/quick-start">View full example in the docs <ArrowRight className="h-4 w-4" /></Link>
+        <div className="api-section site-section">
+          <div className="api-heading">
+            <p className="eyebrow">TypeScript first</p>
+            <h2>Build memory into your agent in a few lines.</h2>
           </div>
-          <CodeBlock label="agent.ts" code={apiSnippet} />
+          {/* <ol className="api-workflow" aria-label="MemoGrafter API workflow">
+            <li><span>01</span><div><h3>Learn</h3><p>Store useful context from conversations.</p></div></li>
+            <li><span>02</span><div><h3>Recall</h3><p>Retrieve only the memories relevant to the current request.</p></div></li>
+            <li><span>03</span><div><h3>Inspect</h3><p>Review facts, versions, and prompt context in Studio.</p></div></li>
+          </ol> */}
+          <div className="api-code-wrap"><CodeBlock label="agent.ts" code={apiSnippet} /></div>
+          <ul className="api-capabilities" aria-label="MemoGrafter capabilities">
+            {["TypeScript-first", "OpenAI, Anthropic & Gemini", "Graph-native memory", "MemoGrafter Studio"].map((item) => <li key={item}><Check className="h-4 w-4" />{item}</li>)}
+          </ul>
+          <Link className="api-docs-link" href="/docs/quick-start">View full example in the docs <ArrowRight className="h-4 w-4" /></Link>
         </div>
       </section>
 
