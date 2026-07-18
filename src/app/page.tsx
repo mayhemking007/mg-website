@@ -23,16 +23,16 @@ await agent.invoke("I prefer quiet areas in Kyoto. My budget is ₹2 lakh.");
 // Search for relevant memories
 const memory = await agent.recall("Japan travel preferences");
 console.log(memory.facts);`;
-const capabilities = ["TypeScript-first", "Graph-native recall", "Lifecycle management", "Operator review", "PostgreSQL + pgvector"];
+const capabilities = ["TypeScript-first", "Lifecycle-managed memory", "Studio included"];
 
 export default function Home() {
   return <main className="site-shell">
     <LandingEffects />
     <Header githubUrl={githubUrl} />
     <section id="home" className="hero-section scroll-mt-20 border-b border-white/10">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 lg:min-h-[calc(100vh-76px)] lg:grid-cols-[0.9fr_1.1fr] lg:py-14">
-        <div className="max-w-2xl" data-reveal><p className="eyebrow">Lifecycle-managed memory for AI agents</p><h1 className="mt-5 text-balance font-semibold leading-[1.02] tracking-[-0.035em] text-white">Memory that evolves with your AI agents.</h1><p className="mt-6 max-w-xl text-pretty">Turn conversations into structured, versioned memory that agents can retrieve, review, and update across sessions. Built for TypeScript with typed pipelines, lifecycle controls, a CLI, and MemoGrafter Studio.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link className="btn-primary" href="/docs/quick-start">Get started <ArrowRight className="h-4 w-4" /></Link><a className="btn-secondary" href={githubUrl} target="_blank" rel="noreferrer">View on GitHub <GitBranch className="h-4 w-4" /></a></div><div className="mt-5 max-w-sm"><InstallCommand /></div><ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2" aria-label="Key capabilities">{capabilities.map((item) => <li key={item} className="flex items-center gap-2 text-sm font-medium text-slate-400"><span className="h-1 w-1 rounded-full bg-emerald-300" aria-hidden="true" />{item}</li>)}</ul></div>
-        <div data-reveal data-reveal-delay="1"><MemoryLifecycleVisual /></div>
+      <div className="hero-inner mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8">
+        <div className="hero-copy" data-reveal><p className="eyebrow">Lifecycle-managed memory for AI agents</p><h1 className="text-balance font-semibold tracking-[-0.035em] text-white">Memory that evolves with your AI agents.</h1><p className="hero-summary text-pretty">Structured memory that evolves, adapts, and stays useful across conversations.</p><div className="hero-actions"><Link className="btn-primary" href="/docs/quick-start">Get started <ArrowRight className="h-4 w-4" /></Link><a className="btn-secondary hero-github" href={githubUrl} target="_blank" rel="noreferrer"><GitBranch className="h-4 w-4" />GitHub</a></div><div className="hero-install"><InstallCommand /></div><ul className="hero-capabilities" aria-label="Key capabilities">{capabilities.map((item) => <li key={item}>{item}</li>)}</ul></div>
+        <div className="hero-visual-wrap" data-reveal data-reveal-delay="1"><MemoryLifecycleVisual /></div>
       </div>
     </section>
     <HowItWorksSection />
