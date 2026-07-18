@@ -196,5 +196,9 @@ export function GraphBackground() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="graph-background" aria-hidden="true" />;
+  return (
+    <div className="graph-background" aria-hidden="true">
+      <canvas ref={canvasRef} />
+    </div>
+  );
 }
