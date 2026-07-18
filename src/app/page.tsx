@@ -1,6 +1,7 @@
 import { ArrowRight, Check, GitBranch } from "lucide-react";
 import Link from "next/link";
 import { DifferenceSection } from "@/components/difference-section";
+import { GraphBackground } from "@/components/graph-background";
 import { InstallCommand } from "@/components/install-command";
 import { HowItWorksSection } from "@/components/how-it-works-section";
 import { LandingEffects } from "@/components/landing-effects";
@@ -27,6 +28,7 @@ const capabilities = ["TypeScript-first", "Lifecycle-managed memory", "Studio in
 
 export default function Home() {
   return <main className="site-shell">
+    <GraphBackground />
     <LandingEffects />
     <Header githubUrl={githubUrl} />
     <section id="home" className="hero-section scroll-mt-20 border-b border-white/10">
