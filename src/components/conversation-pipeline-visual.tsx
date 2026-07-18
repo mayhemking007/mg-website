@@ -20,7 +20,7 @@ export function ConversationPipelineVisual() {
 
   useEffect(() => {
     if (reducedMotion) return;
-    const timer = window.setTimeout(() => setPhase((current) => (current >= 8 ? 1 : current + 1)), phase >= 8 ? 2800 : 1350);
+    const timer = window.setTimeout(() => setPhase((current) => (current >= 8 ? 1 : current + 1)), phase >= 8 ? 900 : 700);
     return () => window.clearTimeout(timer);
   }, [phase, reducedMotion]);
 

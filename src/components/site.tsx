@@ -103,19 +103,9 @@ export function Footer({ contained = false, githubUrl }: { contained?: boolean; 
           : "relative z-30 border-t border-white/10 bg-[#080b0d] px-5 py-8 text-sm text-slate-500 sm:px-8"
       }
     >
-      <div
-        className={
-          contained
-            ? "grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
-            : "mx-auto grid max-w-7xl gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
-        }
-      >
-        <Link href="/" className="flex items-center gap-2 text-slate-300">
-          <MemoryStick className="h-4 w-4 text-emerald-300" />
-          MemoGrafter
-        </Link>
-        <p className="text-center text-slate-400">Created with ❤️ © 2026</p>
-        <div className="flex flex-wrap gap-4 sm:justify-end">
+      <div className={contained ? "footer-grid" : "footer-grid mx-auto max-w-7xl"}>
+        <div><Link href="/" className="footer-brand"><span><MemoryStick className="h-4 w-4" /></span>MemoGrafter</Link><p className="footer-description">Open-source memory infrastructure for TypeScript AI agents.</p></div>
+        <div className="footer-links">
           <Link href="/docs" className="transition-colors hover:text-emerald-200">
             Docs
           </Link>
@@ -126,7 +116,9 @@ export function Footer({ contained = false, githubUrl }: { contained?: boolean; 
             Studio
           </Link>
           {githubUrl ? <a href={githubUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-emerald-200">GitHub</a> : null}
+          <a href="https://www.npmjs.com/package/memo-grafter" target="_blank" rel="noreferrer" className="transition-colors hover:text-emerald-200">npm</a>
         </div>
+        <p className="footer-meta">MIT licensed · © {new Date().getFullYear()} MemoGrafter</p>
       </div>
     </footer>
   );

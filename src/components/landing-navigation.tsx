@@ -56,15 +56,10 @@ export function LandingNavigation({ githubUrl }: { githubUrl: string }) {
         </Link>
 
         <nav className="landing-desktop-nav" aria-label="Primary navigation">
-          {links.map((link) => (
-            <Link key={link.label} href={link.href} className="landing-nav-link" data-active={link.section === activeSection}>
-              {link.label}
-            </Link>
-          ))}
-          <a href={githubUrl} target="_blank" rel="noreferrer noopener" className="landing-github-button" aria-label="GitHub (opens in a new tab)"><GitHubMark />GitHub</a>
-          <Link className="landing-nav-cta" href="/docs/quick-start">
-            Get Started <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="landing-nav-links">{links.map((link) => (
+            <Link key={link.label} href={link.href} className="landing-nav-link" data-active={link.section === activeSection}>{link.label}</Link>
+          ))}</div>
+          <div className="landing-nav-actions"><a href={githubUrl} target="_blank" rel="noreferrer noopener" className="landing-github-button" aria-label="GitHub (opens in a new tab)"><GitHubMark />GitHub</a><Link className="landing-nav-cta" href="/docs/quick-start">Get Started <ArrowRight className="h-3.5 w-3.5" /></Link></div>
         </nav>
         <button className="landing-menu-button" type="button" aria-expanded={menuOpen} aria-controls="landing-mobile-menu" aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} onClick={() => setMenuOpen((open) => !open)}>
           {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
