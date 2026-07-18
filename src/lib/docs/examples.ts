@@ -14,13 +14,11 @@ export const quickStartCode = `# Install the package before creating an agent.
 npm install memo-grafter`;
 
 export const minimalAgentCode = `import "dotenv/config";
-
 import {
   MemoGrafterAgent,
   OpenAIEmbedAdapter,
   OpenAILLMAdapter,
 } from "memo-grafter";
-
 // Create one agent for the chatbot session or workflow you want to remember.
 const agent = new MemoGrafterAgent({
   // MemoGrafter stores graph memory in PostgreSQL.
@@ -29,18 +27,14 @@ const agent = new MemoGrafterAgent({
   llm: new OpenAILLMAdapter("gpt-4o"),
   embedder: new OpenAIEmbedAdapter("text-embedding-3-small"),
 });
-
 // Prepare adapters, storage, and any pending graph state.
 await agent.initialize();
-
 // invoke() answers now and schedules background ingestion for memory later.
 await agent.invoke("I am planning a Japan trip.");
 await agent.invoke("I like quiet towns, bookstores, and local cafes.");
-
 // recall() retrieves relevant structured facts from the memory graph.
 const recall = await agent.recall("travel preferences");
 console.log(recall.facts);
-
 // Close database/provider resources during graceful shutdown.
 await agent.close();`;
 

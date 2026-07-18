@@ -115,12 +115,10 @@ export const docsPages: DocPage[] = [
             label: ".env",
             code: `# MemoGrafter stores graph memory in PostgreSQL.
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/memo_grafter
-
 # Add only the providers your adapters use.
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 GEMINI_API_KEY=...
-
 # Required only for queue mode or recall caching.
 REDIS_URL=redis://localhost:6379`,
           },
