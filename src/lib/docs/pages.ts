@@ -136,6 +136,54 @@ REDIS_URL=redis://localhost:6379`,
     ],
   },
   {
+    slug: "concepts/how-it-works",
+    eyebrow: "Core concepts",
+    title: "How it works",
+    description:
+      "MemoGrafter turns conversation history into structured graph memory, then retrieves only the context an agent needs.",
+    sections: [
+      {
+        title: "System overview",
+        body: [
+          "MemoGrafter sits between your application, its model, and a graph-backed store. During a conversation, it combines the current message with recent raw history and relevant long-term memories to produce a response. Afterward, it ingests new turns in the background so the memory graph stays current without delaying the reply.",
+          "The graph keeps broad topics separate from atomic facts and connects them with edges. This structure lets MemoGrafter recall, maintain, and transfer useful context without replaying an entire transcript.",
+        ],
+        diagram: "memory-graph",
+      },
+      {
+        title: "From conversation to memory",
+        body: [
+          "Ingestion starts with raw user and assistant messages. MemoGrafter detects topic changes, groups related turns into segments, summarizes each segment as a topic node, and extracts durable facts into memory nodes.",
+        ],
+        bullets: [
+          "Messages preserve the original conversation turns.",
+          "Segments mark contiguous ranges that discuss one topic.",
+          "Topic nodes summarize those ranges and provide the graph backbone.",
+          "Memory nodes store individual facts, insights, tasks, questions, and references.",
+          "Graph edges preserve semantic, temporal, reentry, update, and graft relationships.",
+        ],
+      },
+      {
+        title: "From memory to context",
+        body: [
+          "When an agent needs context, MemoGrafter embeds the query, searches active memory nodes by meaning, filters out forgotten or suppressed records, ranks the remaining facts, and formats the best results within a token budget. The application receives concise, prompt-ready memory instead of a full conversation archive.",
+        ],
+        diagram: "invoke-flow",
+      },
+      {
+        title: "Memory across sessions",
+        body: [
+          "Grafting moves relevant memory into another session or agent while preserving where it came from. Lifecycle controls can forget memories, suppress topics, restore them, or mark facts as decayed, conflicting, or superseded without deleting the underlying history by default.",
+        ],
+        bullets: [
+          "Recall retrieves relevant facts for the current request.",
+          "Grafting selects or copies useful context across sessions with provenance.",
+          "Lifecycle and maintenance keep active context accurate while retaining an auditable history.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "concepts/messages",
     eyebrow: "Core concepts",
     title: "Messages are the raw source of conversation memory.",
@@ -148,7 +196,6 @@ REDIS_URL=redis://localhost:6379`,
           "Messages are the only part of the system that exactly mirrors the chat transcript. MemoGrafter keeps them as source material, then derives more durable graph memory from them in the background.",
           "A developer usually touches messages through `invoke()`, `getHistory()`, or direct ingestion tests. Most long-term behavior comes from the graph records created from these turns, not from replaying every raw message forever.",
         ],
-        diagram: "memory-graph",
       },
       {
         title: "Shape",
@@ -190,7 +237,6 @@ export interface Message {
           "A segment is a range of messages that belong to one topic. It keeps long conversations from becoming one undifferentiated memory blob.",
           "Think of segments as the boundary between raw chat and graph memory. They preserve where a topic started and ended, which makes later recall, Studio inspection, and graft provenance easier to explain.",
         ],
-        diagram: "memory-graph",
         code: [{ label: "example", code: `messages 0-4 -> Japan travel planning
 messages 5-8 -> cover letter writing` }],
       },
@@ -221,7 +267,6 @@ messages 5-8 -> cover letter writing` }],
           "A topic node is the durable summary of a segment. It lets MemoGrafter search for a broad theme before choosing the more specific memory facts attached to it.",
           "Developers usually see topic nodes in Studio, graft previews, graph snapshots, and advanced retrieval debugging. They are the backbone that gives memory shape instead of leaving facts as a flat list.",
         ],
-        diagram: "memory-graph",
       },
       {
         title: "Important fields",
@@ -248,7 +293,6 @@ messages 5-8 -> cover letter writing` }],
           "A memory node is the smallest useful piece of long-term memory: one fact, task, insight, question, or reference that can be ranked, filtered, forgotten, superseded, or grafted.",
           "This is the level `recall()` usually returns to the prompt. Topic nodes explain the context; memory nodes provide the concrete facts the assistant should use.",
         ],
-        diagram: "memory-graph",
       },
       {
         title: "Memory triple",
@@ -274,7 +318,6 @@ messages 5-8 -> cover letter writing` }],
           "Edges explain how memories relate over time and meaning. They connect adjacent topics, similar topics, returned topics, grafted memory, conflicting facts, and updated facts.",
           "Without edges, recall would be a bag of matching rows. With edges, MemoGrafter can expand context, preserve provenance, and show why a fact traveled from one session into another.",
         ],
-        diagram: "memory-graph",
       },
       {
         title: "Topic edges",
@@ -308,7 +351,6 @@ messages 5-8 -> cover letter writing` }],
           "Grafting is for moving relevant memory into a new working context without copying an entire transcript. It is useful when a user changes sessions, a worker needs shared context, or an assistant needs only the parts of a graph that match a task.",
           "Every grafted path should remain explainable. MemoGrafter keeps provenance so Studio and debugging tools can show where copied memory came from.",
         ],
-        diagram: "graft-flow",
       },
       {
         title: "Two paths",
@@ -321,8 +363,6 @@ messages 5-8 -> cover letter writing` }],
       {
         title: "Graft flow",
         diagram: "graft-flow",
-        code: [{ label: "flow", code: `topic seeds -> graph expansion -> source context
-active memory facts -> maintenance notes -> token-budgeted prompt` }],
       },
     ],
   },

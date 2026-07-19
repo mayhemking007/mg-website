@@ -13,6 +13,7 @@ export const docsNavGroups: DocNavGroup[] = [
   {
     title: "Core Concepts",
     items: [
+      { href: "/docs/concepts/how-it-works", label: "How it works" },
       { href: "/docs/concepts/messages", label: "Messages" },
       { href: "/docs/concepts/segments", label: "Segments" },
       { href: "/docs/concepts/topic-nodes", label: "Topic Nodes" },
