@@ -29,7 +29,7 @@ export function DocsFrame({
     <main className="site-shell">
       <Header ctaHref="/docs/quick-start" ctaLabel="Quick Start" ctaVariant="primary" />
 
-      <div className="docs-layout mx-auto grid max-w-[1500px] gap-8 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,820px)] lg:gap-10 lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,820px)_220px] xl:gap-12">
+      <div className="docs-layout mx-auto grid max-w-[1680px] gap-8 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,1fr)_220px] xl:gap-16">
         <div>
           <DocsSidebar groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
           <MobileDocsNav groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
