@@ -7,12 +7,24 @@ import { useEffect, useState } from "react";
 const links = [
   { label: "Home", href: "/#home", section: "home" },
   { label: "How it Works", href: "/#how-it-works", section: "how-it-works" },
-  { label: "Features", href: "/#features", section: "features" },
+  { label: "Why MemoGrafter", href: "/#features", section: "features" },
+  { label: "API", href: "/#api", section: "api" },
+  { label: "Studio", href: "/#studio", section: "studio" },
 ];
 
 export function LandingNavigation({ githubUrl }: { githubUrl: string }) {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    if (window.location.pathname !== "/" || navigation?.type !== "reload") return;
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    window.history.replaceState(window.history.state, "", "/");
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
+    return () => { window.history.scrollRestoration = previousScrollRestoration; };
+  }, []);
 
   useEffect(() => {
     const sections = links.flatMap((link) => {
