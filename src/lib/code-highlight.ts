@@ -18,19 +18,42 @@ const highlighterPromise = createHighlighter({
 export function inferCodeLanguage(label: string, language?: string): CodeLanguage {
   const normalized = (language ?? label).toLowerCase();
 
-  if (normalized === "terminal" || normalized.endsWith(".sh") || normalized.includes("bash")) {
+  if (
+    normalized === "terminal" ||
+    normalized === "sh" ||
+    normalized === "shell" ||
+    normalized.endsWith(".sh") ||
+    normalized.includes("bash")
+  ) {
     return "bash";
   }
 
-  if (normalized === ".env" || normalized.endsWith(".env") || normalized.includes("dotenv")) {
+  if (
+    normalized === "env" ||
+    normalized === ".env" ||
+    normalized.endsWith(".env") ||
+    normalized.includes("dotenv")
+  ) {
     return "dotenv";
   }
 
-  if (normalized.endsWith(".ts") || normalized.endsWith(".tsx") || normalized.includes("typescript")) {
+  if (
+    normalized === "ts" ||
+    normalized === "tsx" ||
+    normalized.endsWith(".ts") ||
+    normalized.endsWith(".tsx") ||
+    normalized.includes("typescript")
+  ) {
     return "typescript";
   }
 
-  if (normalized.endsWith(".js") || normalized.endsWith(".jsx") || normalized.includes("javascript")) {
+  if (
+    normalized === "js" ||
+    normalized === "jsx" ||
+    normalized.endsWith(".js") ||
+    normalized.endsWith(".jsx") ||
+    normalized.includes("javascript")
+  ) {
     return "javascript";
   }
 

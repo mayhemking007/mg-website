@@ -7,7 +7,9 @@ import {
   minimalAgentCode,
   studioCode,
 } from "./examples";
-export const docsPages: DocPage[] = [
+import { expandedDocsPages } from "./expanded-pages";
+
+const existingDocsPages: DocPage[] = [
   {
     slug: "",
     eyebrow: "Developer docs",
@@ -995,6 +997,26 @@ ${studioCode}` }],
       },
     ],
   },
+];
+
+const lockedSlugs = new Set([
+  "",
+  "installation",
+  "quick-start",
+  "environment-setup",
+  "concepts/how-it-works",
+  "concepts/messages",
+  "concepts/segments",
+  "concepts/topic-nodes",
+  "concepts/memory-nodes",
+  "concepts/graph-edges",
+  "concepts/grafting",
+  "concepts/lifecycle",
+]);
+
+export const docsPages: DocPage[] = [
+  ...existingDocsPages.filter((page) => lockedSlugs.has(page.slug)),
+  ...expandedDocsPages,
 ];
 
 const docPages = new Map(docsPages.map((page) => [page.slug, page]));
