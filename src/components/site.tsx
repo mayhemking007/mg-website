@@ -6,16 +6,14 @@ import {
   CircleDot,
   Database,
   GitBranch,
-  Menu,
   MemoryStick,
   Network,
   Terminal,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import { LandingNavigation } from "@/components/landing-navigation";
 import { CopyCodeButton } from "@/components/copy-code-button";
-export { DocsSidebar } from "@/components/docs-sidebar";
+export { DocsSidebar, MobileDocsNav } from "@/components/docs-sidebar";
 import { highlightCode, inferCodeLanguage } from "@/lib/code-highlight";
 
 type FeatureCardProps = {
@@ -36,16 +34,6 @@ type PipelineStep = {
   icon: LucideIcon;
   title: string;
   text: string;
-};
-
-type DocsNavItem = {
-  href: string;
-  label: string;
-};
-
-type DocsNavGroup = {
-  title: string;
-  items: DocsNavItem[];
 };
 
 export function Header({
@@ -213,59 +201,6 @@ export function Pipeline({ steps }: { steps: PipelineStep[] }) {
         </div>
       ))}
     </div>
-  );
-}
-
-export function MobileDocsNav({
-  items,
-  groups,
-  activeHref,
-}: {
-  items: DocsNavItem[];
-  groups?: DocsNavGroup[];
-  activeHref?: string;
-}) {
-  const navGroups = groups ?? [{ title: "Docs", items }];
-
-  return (
-    <details className="panel p-3 lg:hidden">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-semibold text-white">
-        <span className="flex items-center gap-2">
-          <Menu className="h-4 w-4 text-sky-300" />
-          Docs navigation
-        </span>
-        <X className="h-4 w-4 text-slate-500" />
-      </summary>
-      <nav className="mt-2 grid gap-4 text-sm">
-        {navGroups.map((group) => (
-          <div key={group.title}>
-            <div className="mb-2 px-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
-              {group.title}
-            </div>
-            <div className="grid gap-1">
-              {group.items.map((item) => {
-                const isActive = activeHref === item.href;
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    data-active={isActive ? "true" : undefined}
-                    className={`rounded-md px-3 py-2 transition-colors ${
-                      isActive
-                        ? "docs-nav-link bg-emerald-300/10 text-emerald-200"
-                        : "docs-nav-link text-slate-400 hover:bg-white/[0.04] hover:text-slate-100"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </nav>
-    </details>
   );
 }
 
