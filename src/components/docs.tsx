@@ -159,72 +159,48 @@ export function DocsArticle({ page }: { page: DocPage }) {
 function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["diagram"]> }) {
   if (type === "intro-graph") {
     return (
-      <div className="docs-diagram docs-graph-diagram" aria-label="MemoGrafter memory graph diagram">
-        <svg className="docs-graph-svg" viewBox="0 0 760 340" aria-hidden="true">
-          <line className="docs-graph-edge docs-graph-edge-green" x1="196" y1="149" x2="300" y2="109" />
-          <line className="docs-graph-edge docs-graph-edge-blue" x1="196" y1="191" x2="300" y2="231" />
-          <line className="docs-graph-edge docs-graph-edge-amber" x1="403" y1="97" x2="541" y2="115" />
-          <line className="docs-graph-edge docs-graph-edge-blue" x1="404" y1="250" x2="540" y2="250" />
-          <line className="docs-graph-edge docs-graph-edge-muted" x1="350" y1="144" x2="350" y2="196" />
-          <line className="docs-graph-edge docs-graph-edge-amber" x1="184" y1="278" x2="297" y2="259" />
+      <div className="docs-diagram docs-graph-diagram">
+        <svg className="docs-graph-svg" viewBox="0 0 1120 260" role="img" aria-label="Messages are segmented into topic nodes, which produce structured memories, graph edges, and grafting; structured memories support recall.">
+          <defs>
+            <marker id="docs-intro-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
 
-          <g className="docs-graph-node" transform="translate(140 170)">
-            <circle className="docs-graph-ring" r="60" />
-            <circle r="60" />
-            <text y="-7">Message</text>
-            <text y="14">buffer</text>
-            <g className="docs-graph-tooltip" transform="translate(-104 -108)">
-              <rect width="208" height="34" rx="7" />
-              <text x="104" y="18">Keeps raw conversation turns</text>
-            </g>
+          <path className="docs-graph-edge" d="M 200 130 H 250" />
+          <path className="docs-graph-edge" d="M 430 130 H 480" />
+          <path className="docs-graph-edge" d="M 620 130 C 650 130, 655 45, 700 45" />
+          <path className="docs-graph-edge" d="M 620 130 H 700" />
+          <path className="docs-graph-edge" d="M 620 130 C 650 175, 665 217, 715 217" />
+          <path className="docs-graph-edge docs-graph-edge-dotted" d="M 880 45 H 930" />
+
+          <g className="docs-graph-node docs-graph-node-source" transform="translate(20 104)">
+            <rect width="180" height="52" rx="9" />
+            <text x="90" y="27">Messages or raw text</text>
           </g>
-          <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 90)">
-            <circle className="docs-graph-ring" r="54" />
-            <circle r="54" />
-            <text y="-7">Topic</text>
-            <text y="14">node</text>
-            <g className="docs-graph-tooltip" transform="translate(-119 -102)">
-              <rect width="238" height="34" rx="7" />
-              <text x="119" y="18">Stores the broader topic</text>
-            </g>
+          <g className="docs-graph-node docs-graph-node-segment" transform="translate(250 104)">
+            <rect width="180" height="52" rx="9" />
+            <text x="90" y="27">Topic segmentation</text>
           </g>
-          <g className="docs-graph-node docs-graph-node-topic" transform="translate(350 250)">
-            <circle className="docs-graph-ring" r="54" />
-            <circle r="54" />
-            <text y="-7">Topic</text>
-            <text y="14">node</text>
-            <g className="docs-graph-tooltip" transform="translate(-119 -102)">
-              <rect width="238" height="34" rx="7" />
-              <text x="119" y="18">Stores the broader topic</text>
-            </g>
+          <g className="docs-graph-node docs-graph-node-topic" transform="translate(480 104)">
+            <rect width="140" height="52" rx="9" />
+            <text x="70" y="27">Topic nodes</text>
           </g>
-          <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 120)">
-            <circle className="docs-graph-ring" r="50" />
-            <circle r="50" />
-            <text y="5">Memory</text>
-            <g className="docs-graph-tooltip" transform="translate(-276 -17)">
-              <rect width="224" height="34" rx="7" />
-              <text x="112" y="18">Stores one atomic memory</text>
-            </g>
+          <g className="docs-graph-node docs-graph-node-memory" transform="translate(700 19)">
+            <rect width="180" height="52" rx="9" />
+            <text x="90" y="27">Structured memories</text>
           </g>
-          <g className="docs-graph-node docs-graph-node-memory" transform="translate(590 250)">
-            <circle className="docs-graph-ring" r="50" />
-            <circle r="50" />
-            <text y="3">Memory</text>
-            <g className="docs-graph-tooltip" transform="translate(-276 -17)">
-              <rect width="224" height="34" rx="7" />
-              <text x="112" y="18">Stores one atomic memory</text>
-            </g>
+          <g className="docs-graph-node docs-graph-node-edges" transform="translate(700 104)">
+            <rect width="160" height="52" rx="9" />
+            <text x="80" y="27">Graph edges</text>
           </g>
-          <g className="docs-graph-node docs-graph-node-graft" transform="translate(140 285)">
-            <circle className="docs-graph-ring" r="45" />
-            <circle r="45" />
-            <text y="-7">Graft</text>
-            <text y="14">Node</text>
-            <g className="docs-graph-tooltip" transform="translate(-116 -94)">
-              <rect width="232" height="34" rx="7" />
-              <text x="116" y="18">Preserves copied-memory origin</text>
-            </g>
+          <g className="docs-graph-node docs-graph-node-graft" transform="translate(715 191)">
+            <rect width="130" height="52" rx="9" />
+            <text x="65" y="27">Grafting</text>
+          </g>
+          <g className="docs-graph-node docs-graph-node-recall" transform="translate(930 19)">
+            <rect width="130" height="52" rx="9" />
+            <text x="65" y="27">Recall</text>
           </g>
         </svg>
       </div>

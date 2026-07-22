@@ -614,21 +614,32 @@ samp {
 
 .docs-graph-diagram {
   min-width: 0;
+  padding-block: 14px;
 }
 
 .docs-graph-svg {
   display: block;
-  min-width: 640px;
+  min-width: 760px;
   width: 100%;
-  height: auto;
+  height: 290px;
   overflow: visible;
 }
 
 .docs-graph-edge {
-  opacity: 0.76;
-  stroke-width: 2;
+  fill: none;
+  marker-end: url(#docs-intro-arrow);
+  opacity: 0.84;
+  stroke: rgba(203, 213, 225, 0.72);
+  stroke-width: 1.25;
   stroke-linecap: round;
-  animation: docs-graph-edge-breathe 4.8s ease-in-out infinite;
+}
+
+#docs-intro-arrow path {
+  fill: rgba(203, 213, 225, 0.78);
+}
+
+.docs-graph-edge-dotted {
+  stroke-dasharray: 3 3;
 }
 
 .docs-graph-edge-green {
@@ -665,11 +676,52 @@ samp {
   animation: docs-graph-node-pulse 5.6s ease-in-out infinite;
 }
 
+.docs-graph-node > rect {
+  fill: rgba(30, 41, 59, 0.9);
+  stroke: rgba(125, 211, 252, 0.38);
+  stroke-width: 1;
+}
+
+.docs-graph-node-source > rect {
+  fill: rgba(30, 64, 175, 0.24);
+  stroke: rgba(96, 165, 250, 0.5);
+}
+
+.docs-graph-node-segment > rect {
+  fill: rgba(14, 116, 144, 0.24);
+  stroke: rgba(103, 232, 249, 0.46);
+}
+
+.docs-graph-node-topic > rect {
+  fill: rgba(5, 150, 105, 0.22);
+  stroke: rgba(110, 231, 183, 0.36);
+}
+
+.docs-graph-node-memory > rect {
+  fill: rgba(109, 40, 217, 0.22);
+  stroke: rgba(196, 181, 253, 0.45);
+}
+
+.docs-graph-node-edges > rect {
+  fill: rgba(3, 105, 161, 0.24);
+  stroke: rgba(125, 211, 252, 0.46);
+}
+
+.docs-graph-node-graft > rect {
+  fill: rgba(180, 83, 9, 0.24);
+  stroke: rgba(252, 211, 77, 0.46);
+}
+
+.docs-graph-node-recall > rect {
+  fill: rgba(4, 120, 87, 0.26);
+  stroke: rgba(110, 231, 183, 0.5);
+}
+
 .docs-graph-node text {
   dominant-baseline: middle;
   fill: #e2e8f0;
-  font-size: 15px;
-  font-weight: 650;
+  font-size: 14px;
+  font-weight: 600;
   text-anchor: middle;
 }
 
