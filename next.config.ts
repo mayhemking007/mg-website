@@ -3,7 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
-      { source: "/docs/guides/ingest-text", destination: "/docs/guides/knowledge-extraction", permanent: true },
+      { source: "/docs/guides/ingest-text", destination: "/docs/guides/ingesting-extracting-memory", permanent: true },
+      { source: "/docs/guides/knowledge-extraction", destination: "/docs/guides/ingesting-extracting-memory", permanent: true },
+      { source: "/docs/guides/memory-review", destination: "/docs/guides/inspecting-reviewing-memory", permanent: true },
+      { source: "/docs/guides/forget-memory", destination: "/docs/guides/forgetting-privacy", permanent: true },
+      { source: "/docs/guides/long-running-agents", destination: "/docs/advanced/long-running-agents", permanent: true },
       { source: "/docs/guides/recall-facts", destination: "/docs/api-reference/recall", permanent: true },
       { source: "/docs/guides/graft-memory", destination: "/docs/guides/multi-session-memory", permanent: true },
       { source: "/docs/guides/studio", destination: "/docs/studio/launching-studio", permanent: true },

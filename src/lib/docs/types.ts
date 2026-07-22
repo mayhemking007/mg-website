@@ -16,7 +16,18 @@ export type DocSection = {
     | "invoke-flow"
     | "ingestion-flow"
     | "graft-flow"
-    | "lifecycle-flow";
+    | "lifecycle-flow"
+    | "recall-graft-flow"
+    | "scope-flow"
+    | "streaming-flow"
+    | "fleet-flow"
+    | "reentry-flow";
+};
+
+export type DocGuideMeta = {
+  time: string;
+  difficulty?: "Beginner" | "Intermediate" | "Advanced";
+  prerequisites?: DocRelatedLink[];
 };
 
 export type DocRelatedLink = {
@@ -30,6 +41,7 @@ export type DocPage = {
   description: string;
   eyebrow: string;
   slug: string;
+  guideMeta?: DocGuideMeta;
   sections: DocSection[];
 };
 

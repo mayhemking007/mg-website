@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, BookOpen, CircleDot } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CircleDot, Clock3, Gauge } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { OnThisPage } from "@/components/on-this-page";
@@ -72,6 +72,31 @@ export function DocsArticle({ page }: { page: DocPage }) {
           {page.title}
         </h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">{page.description}</p>
+        {page.guideMeta ? (
+          <div className="mt-6 grid max-w-3xl gap-3 rounded-lg border border-emerald-300/15 bg-emerald-300/[0.045] p-4 text-sm text-slate-300 sm:grid-cols-2">
+            <div className="flex items-center gap-2">
+              <Clock3 className="h-4 w-4 text-emerald-300" />
+              <span><span className="font-medium text-white">Estimated time:</span> {page.guideMeta.time}</span>
+            </div>
+            {page.guideMeta.difficulty ? (
+              <div className="flex items-center gap-2">
+                <Gauge className="h-4 w-4 text-sky-300" />
+                <span><span className="font-medium text-white">Level:</span> {page.guideMeta.difficulty}</span>
+              </div>
+            ) : null}
+            {page.guideMeta.prerequisites?.length ? (
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 sm:col-span-2">
+                <span className="font-medium text-white">Prerequisites:</span>
+                {page.guideMeta.prerequisites.map((item, index) => (
+                  <span key={item.href}>
+                    <Link className="text-sky-300 transition-colors hover:text-sky-200" href={item.href}>{item.label}</Link>
+                    {index < page.guideMeta!.prerequisites!.length - 1 ? <span className="ml-2 text-slate-600">·</span> : null}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </header>
 
       <div>
@@ -213,6 +238,11 @@ function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["
     "ingestion-flow": ["Raw text", "Segment", "Embed", "Store", "Link graph"],
     "graft-flow": ["Source memory", "Select topics", "Provenance", "Target session"],
     "lifecycle-flow": ["Active memory", "Forget or suppress", "Filtered recall", "Studio audit", "Restore"],
+    "recall-graft-flow": ["Choose intent", "Recall facts", "Assemble topics", "Copy when needed"],
+    "scope-flow": ["Application identity", "Session boundary", "Optional tags", "Authorized recall"],
+    "streaming-flow": ["Recall first", "Start provider stream", "Collect final text", "Ingest completed turn"],
+    "fleet-flow": ["Worker memory", "Fleet shared memory", "Conductor selection", "Target worker"],
+    "reentry-flow": ["Original topic", "Different topic", "Return to subject", "Reentry edge"],
   } satisfies Record<string, string[]>;
 
   const nodes = diagrams[type];
