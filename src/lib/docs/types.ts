@@ -8,6 +8,7 @@ export type DocSection = {
   title: string;
   body?: string[];
   bullets?: string[];
+  links?: DocRelatedLink[];
   code?: DocCodeBlock[];
   diagram?:
     | "intro-graph"
@@ -16,6 +17,12 @@ export type DocSection = {
     | "ingestion-flow"
     | "graft-flow"
     | "lifecycle-flow";
+};
+
+export type DocRelatedLink = {
+  label: string;
+  href: string;
+  description?: string;
 };
 
 export type DocPage = {
@@ -28,12 +35,24 @@ export type DocPage = {
 
 export type DocNavGroup = {
   title: string;
-  items: Array<{
-    href: string;
-    label: string;
-    icon: DocNavIcon;
-  }>;
+  items: DocNavNode[];
 };
+
+export type DocNavPage = {
+  type?: "page";
+  href: string;
+  label: string;
+  icon: DocNavIcon;
+};
+
+export type DocNavFolder = {
+  type: "group";
+  id: string;
+  label: string;
+  items: DocNavNode[];
+};
+
+export type DocNavNode = DocNavPage | DocNavFolder;
 
 export type DocNavIcon =
   | "archive"

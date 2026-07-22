@@ -1,4 +1,5 @@
 import type { DocNavGroup } from "./types";
+import { apiReferenceNavItems } from "./api-reference";
 
 export const docsNavGroups: DocNavGroup[] = [
   {
@@ -39,18 +40,7 @@ export const docsNavGroups: DocNavGroup[] = [
   },
   {
     title: "API Reference",
-    items: [
-      { href: "/docs/api-reference/memo-grafter-agent", label: "MemoGrafterAgent", icon: "box" },
-      { href: "/docs/api-reference/invoke", label: "invoke()", icon: "play" },
-      { href: "/docs/api-reference/ingest", label: "ingest()", icon: "archive" },
-      { href: "/docs/api-reference/recall", label: "recall()", icon: "search" },
-      { href: "/docs/api-reference/graft", label: "graft()", icon: "combine" },
-      { href: "/docs/api-reference/forget", label: "forget()", icon: "trash" },
-      { href: "/docs/api-reference/history", label: "history()", icon: "history" },
-      { href: "/docs/api-reference/studio-api", label: "Studio API", icon: "monitor-play" },
-      { href: "/docs/api-reference/types", label: "Types", icon: "braces" },
-      { href: "/docs/api-reference/errors", label: "Errors", icon: "circle-alert" },
-    ],
+    items: apiReferenceNavItems,
   },
   {
     title: "Adapters",
@@ -112,4 +102,8 @@ export const docsNavGroups: DocNavGroup[] = [
   },
 ];
 
-export const docsNavItems = docsNavGroups.flatMap((group) => group.items);
+export const docsNavItems = docsNavGroups.flatMap((group) => flattenPages(group.items));
+
+function flattenPages(items: DocNavGroup["items"]): Array<Extract<DocNavGroup["items"][number], { href: string }>> {
+  return items.flatMap((item) => item.type === "group" ? flattenPages(item.items) : [item]);
+}

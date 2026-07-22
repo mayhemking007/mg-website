@@ -58,22 +58,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import type { DocNavIcon } from "@/lib/docs";
-
-type DocsNavItem = {
-  href: string;
-  label: string;
-  icon: DocNavIcon;
-};
-
-type DocsNavGroup = {
-  title: string;
-  items: DocsNavItem[];
-};
+import type { DocNavGroup, DocNavIcon, DocNavNode } from "@/lib/docs";
 
 type DocsNavigationProps = {
-  items: DocsNavItem[];
-  groups?: DocsNavGroup[];
+  items: DocNavNode[];
+  groups?: DocNavGroup[];
   activeHref?: string;
 };
 
@@ -133,29 +122,49 @@ const pageIcons: Record<DocNavIcon, LucideIcon> = {
   zap: Zap,
 };
 
-function activeGroupTitle(groups: DocsNavGroup[], activeHref?: string) {
-  return groups.find((group) => group.items.some((item) => item.href === activeHref))?.title;
+function nodeContainsHref(node: DocNavNode, activeHref?: string): boolean {
+  return node.type === "group"
+    ? node.items.some((item) => nodeContainsHref(item, activeHref))
+    : node.href === activeHref;
 }
 
-function initialOpenGroups(groups: DocsNavGroup[], activeHref?: string) {
-  const initial = new Set<string>(["Getting Started"]);
-  const activeGroup = activeGroupTitle(groups, activeHref);
+function activeGroupIds(groups: DocNavGroup[], activeHref?: string) {
+  const active = new Set<string>();
 
-  if (activeGroup) initial.add(activeGroup);
+  function visit(nodes: DocNavNode[]) {
+    for (const node of nodes) {
+      if (node.type === "group" && nodeContainsHref(node, activeHref)) {
+        active.add(node.id);
+        visit(node.items);
+      }
+    }
+  }
+
+  for (const group of groups) {
+    if (group.items.some((item) => nodeContainsHref(item, activeHref))) {
+      active.add(group.title);
+      visit(group.items);
+    }
+  }
+
+  return active;
+}
+
+function initialOpenGroups(groups: DocNavGroup[], activeHref?: string) {
+  const initial = new Set<string>(["Getting Started"]);
+  for (const id of activeGroupIds(groups, activeHref)) initial.add(id);
 
   return initial;
 }
 
-function useOpenGroups(groups: DocsNavGroup[], activeHref?: string) {
+function useOpenGroups(groups: DocNavGroup[], activeHref?: string) {
   const [openGroups, setOpenGroups] = useState(() => initialOpenGroups(groups, activeHref));
 
   useLayoutEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const stored = window.sessionStorage.getItem(groupsStorageKey);
       const next = stored ? new Set<string>(JSON.parse(stored) as string[]) : initialOpenGroups(groups, activeHref);
-      const activeGroup = activeGroupTitle(groups, activeHref);
-
-      if (activeGroup) next.add(activeGroup);
+      for (const id of activeGroupIds(groups, activeHref)) next.add(id);
       setOpenGroups(next);
     });
 
@@ -195,7 +204,7 @@ function DocsGroups({
   onNavigate,
   idPrefix,
 }: {
-  groups: DocsNavGroup[];
+  groups: DocNavGroup[];
   activeHref?: string;
   openGroups: Set<string>;
   toggleGroup: (title: string) => void;
@@ -213,7 +222,9 @@ function DocsGroups({
           aria-expanded={isOpen}
           aria-controls={groupId}
           onClick={() => toggleGroup(group.title)}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-medium uppercase tracking-[0.14em] text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
+          className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-medium uppercase tracking-[0.14em] transition-colors hover:bg-white/[0.04] hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
+            isOpen ? "bg-emerald-300/[0.07] text-emerald-100" : "text-slate-400"
+          }`}
         >
           <ChevronRight
             className={`h-4 w-4 shrink-0 transition-transform duration-200 motion-reduce:transition-none ${isOpen ? "rotate-90" : ""}`}
@@ -222,38 +233,82 @@ function DocsGroups({
           <span className="min-w-0">{group.title}</span>
         </button>
         <div id={groupId} hidden={!isOpen}>
-          <div className="grid gap-1 pb-2">
-            {group.items.map((item) => {
-              const isActive = activeHref === item.href;
-              const PageIcon = pageIcons[item.icon];
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  data-active={isActive ? "true" : undefined}
-                  onClick={onNavigate}
-                  className={`group/page flex items-center gap-2.5 rounded-md px-3 py-2 transition-colors ${
-                    isActive
-                      ? "docs-nav-link bg-emerald-300/12 text-emerald-100"
-                      : "docs-nav-link text-slate-400 hover:bg-white/[0.04] hover:text-slate-100"
-                  }`}
-                >
-                  <PageIcon
-                    className={`h-4 w-4 shrink-0 transition-colors ${
-                      isActive ? "text-emerald-300" : "text-slate-500 group-hover/page:text-slate-300"
-                    }`}
-                    aria-hidden="true"
-                  />
-                  <span className="min-w-0">{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
+          <DocsNodes items={group.items} activeHref={activeHref} openGroups={openGroups} toggleGroup={toggleGroup} onNavigate={onNavigate} idPrefix={idPrefix} depth={0} />
         </div>
       </div>
     );
   });
+}
+
+function DocsNodes({
+  items,
+  activeHref,
+  openGroups,
+  toggleGroup,
+  onNavigate,
+  idPrefix,
+  depth,
+}: {
+  items: DocNavNode[];
+  activeHref?: string;
+  openGroups: Set<string>;
+  toggleGroup: (id: string) => void;
+  onNavigate?: () => void;
+  idPrefix: string;
+  depth: number;
+}) {
+  return (
+    <div className="grid gap-1 pb-2">
+      {items.map((item) => {
+        if (item.type === "group") {
+          const isOpen = openGroups.has(item.id);
+          const contentId = `${idPrefix}-${item.id}`;
+
+          return (
+            <div key={item.id}>
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={contentId}
+                onClick={() => toggleGroup(item.id)}
+                className={`flex w-full items-center gap-2 rounded-md py-2 pr-3 text-left text-xs font-medium tracking-[0.08em] transition-colors hover:bg-white/[0.04] hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
+                  isOpen ? "bg-emerald-300/[0.07] text-emerald-100" : "text-slate-400"
+                }`}
+                style={{ paddingLeft: `${12 + depth * 12}px` }}
+              >
+                <ChevronRight className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 motion-reduce:transition-none ${isOpen ? "rotate-90" : ""}`} aria-hidden="true" />
+                <span className="min-w-0">{item.label}</span>
+              </button>
+              <div id={contentId} hidden={!isOpen}>
+                <DocsNodes items={item.items} activeHref={activeHref} openGroups={openGroups} toggleGroup={toggleGroup} onNavigate={onNavigate} idPrefix={idPrefix} depth={depth + 1} />
+              </div>
+            </div>
+          );
+        }
+
+        const isActive = activeHref === item.href;
+        const PageIcon = pageIcons[item.icon];
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            data-active={isActive ? "true" : undefined}
+            onClick={onNavigate}
+            style={{ paddingLeft: `${12 + depth * 12}px` }}
+            className={`group/page flex items-center gap-2.5 rounded-md py-2 pr-3 transition-colors ${
+              isActive
+                ? "docs-nav-link bg-emerald-300/12 text-emerald-100"
+                : "docs-nav-link text-slate-400 hover:bg-white/[0.04] hover:text-slate-100"
+            }`}
+          >
+            <PageIcon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-emerald-300" : "text-slate-500 group-hover/page:text-slate-300"}`} aria-hidden="true" />
+            <span className="min-w-0">{item.label}</span>
+          </Link>
+        );
+      })}
+    </div>
+  );
 }
 
 export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) {

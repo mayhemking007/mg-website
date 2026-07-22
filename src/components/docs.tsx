@@ -99,6 +99,20 @@ export function DocsArticle({ page }: { page: DocPage }) {
                 ))}
               </div>
             ) : null}
+            {section.links ? (
+              <div className="mt-5 grid gap-3">
+                {section.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-md border border-white/10 bg-white/[0.025] px-4 py-3 transition-colors hover:border-emerald-300/25 hover:bg-emerald-300/[0.05]"
+                  >
+                    <span className="block text-sm font-medium text-emerald-200">{link.label}</span>
+                    {link.description ? <span className="mt-1 block text-sm leading-6 text-slate-400">{link.description}</span> : null}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
             {section.diagram ? <DocsDiagram type={section.diagram} /> : null}
             {section.code ? (
               <div className="mt-6 grid gap-4">

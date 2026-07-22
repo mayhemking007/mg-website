@@ -8,6 +8,7 @@ import {
   studioCode,
 } from "./examples";
 import { expandedDocsPages } from "./expanded-pages";
+import { apiReferencePages } from "./api-reference";
 
 const existingDocsPages: DocPage[] = [
   {
@@ -1016,7 +1017,8 @@ const lockedSlugs = new Set([
 
 export const docsPages: DocPage[] = [
   ...existingDocsPages.filter((page) => lockedSlugs.has(page.slug)),
-  ...expandedDocsPages,
+  ...expandedDocsPages.filter((page) => !page.slug.startsWith("api-reference/")),
+  ...apiReferencePages,
 ];
 
 const docPages = new Map(docsPages.map((page) => [page.slug, page]));
