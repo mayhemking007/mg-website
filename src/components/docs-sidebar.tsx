@@ -346,7 +346,7 @@ export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) 
     <aside
       ref={sidebarRef}
       onScroll={preserveScrollPosition}
-      className="docs-sidebar hidden max-h-[calc(100vh-140px)] overflow-y-auto py-2 pl-2 pr-4 lg:block"
+      className="docs-sidebar hidden overflow-y-auto py-2 pl-2 pr-4 lg:block"
     >
       <div className="mb-3 flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white">
         <FileText className="h-4 w-4 text-sky-300" />
@@ -380,7 +380,7 @@ export function MobileDocsNav({ items, groups, activeHref }: DocsNavigationProps
         </span>
         <X className="h-4 w-4 text-slate-500" />
       </summary>
-      <nav className="mt-2 grid gap-2 text-sm">
+      <nav className="grid gap-2 text-sm">
         <DocsGroups
           groups={navGroups}
           activeHref={activeHref}

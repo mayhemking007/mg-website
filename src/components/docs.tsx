@@ -2,11 +2,11 @@ import { ArrowLeft, ArrowRight, BookOpen, CircleDot, Clock3, Gauge } from "lucid
 import Link from "next/link";
 import type React from "react";
 import { OnThisPage } from "@/components/on-this-page";
+import { DocsHeader } from "@/components/docs-header";
 import {
   CodeBlock,
   DocsSidebar,
   Footer,
-  Header,
   MobileDocsNav,
 } from "@/components/site";
 import {
@@ -15,6 +15,8 @@ import {
   docsNavItems,
   getAdjacentDocs,
 } from "@/lib/docs";
+import { docsSearchIndex } from "@/lib/docs/search";
+import { getDocSectionId } from "@/lib/docs/section-id";
 
 export function DocsFrame({
   activeHref,
@@ -27,7 +29,7 @@ export function DocsFrame({
 }) {
   return (
     <main className="site-shell">
-      <Header ctaHref="/docs/quick-start" ctaLabel="Quick Start" ctaVariant="primary" />
+      <DocsHeader searchRecords={docsSearchIndex} />
 
       <div className="docs-layout mx-auto grid max-w-[1680px] gap-8 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,1fr)_220px] xl:gap-16">
         <div>
@@ -35,7 +37,7 @@ export function DocsFrame({
           <MobileDocsNav groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
         </div>
 
-        <article className="min-w-0">
+        <article id="docs-content" className="min-w-0">
           {children}
           <Footer contained />
         </article>
@@ -50,7 +52,7 @@ export function DocsArticle({ page }: { page: DocPage }) {
   const activeHref = page.slug ? `/docs/${page.slug}` : "/docs";
   const adjacent = getAdjacentDocs(page.slug);
   const tocSections = page.sections.map((section) => ({
-    id: sectionId(section.title),
+    id: getDocSectionId(section.title),
     title: section.title,
   }));
 
@@ -103,8 +105,8 @@ export function DocsArticle({ page }: { page: DocPage }) {
         {page.sections.map((section) => (
           <section
             key={section.title}
-            id={sectionId(section.title)}
-            className="docs-section scroll-mt-28 border-b border-white/10 py-9 last:border-b-0"
+            id={getDocSectionId(section.title)}
+            className="docs-section border-b border-white/10 py-9 last:border-b-0"
           >
             <h2 className="text-2xl font-semibold text-white">{section.title}</h2>
             {section.body ? (
@@ -259,14 +261,6 @@ function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["
       </div>
     </div>
   );
-}
-
-function sectionId(title: string) {
-  return title
-    .toLowerCase()
-    .replace(/`/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function renderInlineCode(text: string) {
