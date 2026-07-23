@@ -237,7 +237,7 @@ samp {
 }
 
 .docs-header {
-  --docs-header-height: 68px;
+  --docs-header-height: 102px;
   position: sticky;
   z-index: 60;
   top: 0;
@@ -322,7 +322,7 @@ samp {
   padding-inline: 12px;
   border: 1px solid transparent;
   border-radius: 7px;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 550;
   transition:
     border-color 160ms ease,
@@ -384,7 +384,7 @@ samp {
   padding-inline: 12px;
   border-radius: 6px;
   color: #cbd5e1;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .docs-header-mobile-menu a:hover {
@@ -394,16 +394,16 @@ samp {
 
 .docs-sidebar {
   position: fixed;
-  top: 88px;
+  top: 122px;
   width: 250px;
-  max-height: calc(100vh - 108px);
+  max-height: calc(100vh - 142px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(13, 18, 22, 0.42);
   scrollbar-color: rgba(148, 163, 184, 0.45) rgba(255, 255, 255, 0.025);
 }
 
 .docs-section {
-  scroll-margin-top: 88px;
+  scroll-margin-top: 122px;
 }
 
 @media (max-width: 767px) {
@@ -426,6 +426,12 @@ samp {
 
   .docs-header-search-open {
     display: block;
+  }
+}
+
+@media (max-width: 639px) {
+  .docs-product-label {
+    display: none;
   }
 }
 
@@ -587,23 +593,29 @@ samp {
 .retrieval-pulse span { position: absolute; inset: 18px; border: 1px solid rgba(125,211,252,.15); border-radius: inherit; }
 
 .landing-header { position: sticky; z-index: 40; top: 0; border-bottom: 1px solid rgba(255,255,255,.09); background: rgba(8,11,13,.86); backdrop-filter: blur(16px); }
-.landing-nav-shell { display: grid; width: 100%; max-width: 1280px; height: 66px; margin-inline: auto; grid-template-columns: 1fr auto; align-items: center; gap: 18px; padding-inline: 20px; }
-.landing-brand { display: flex; width: max-content; align-items: center; gap: 10px; color: #f8fafc; font-size: .94rem; font-weight: 650; letter-spacing: -.01em; }
-.landing-brand-mark { display: grid; width: 31px; height: 31px; place-items: center; border: 1px solid rgba(110,231,183,.28); border-radius: 6px; background: rgba(110,231,183,.08); color: #6ee7b7; }
+.landing-nav-shell { display: grid; width: 100%; max-width: 1760px; height: 102px; margin-inline: auto; grid-template-columns: 1fr auto; align-items: center; gap: 18px; padding-inline: 16px; }
+.landing-brand { display: flex; width: max-content; align-items: center; gap: 0; font-family: var(--font-dosis), sans-serif; font-weight: 600; line-height: 1; }
+.landing-brand-logo { flex: none; transition: filter 180ms ease; }
+.landing-brand-wordmark { display: flex; align-items: baseline; margin-left: -4px; color: #f8fafc; font-size: 1.6875rem; letter-spacing: .035em; transition: color 180ms ease; }
+.landing-brand-initial { color: #6ee7b7; font-size: 2.125rem; line-height: .8; letter-spacing: .01em; transition: color 180ms ease; }
+.landing-brand-g { margin-left: .04em; }
+.site-brand-animated:hover .landing-brand-logo { filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, .2)); }
+.site-brand-animated:hover .landing-brand-wordmark { color: #6ee7b7; }
+.site-brand-animated:hover .landing-brand-initial { color: #fff; }
 .landing-desktop-nav { display: none; align-items: center; justify-content: flex-end; gap: 4px; }
-.landing-nav-link { position: relative; padding: 9px 10px; color: #94a3b8; font-size: .82rem; font-weight: 500; transition: color 160ms ease, background 160ms ease; }
+.landing-nav-link { position: relative; padding: 9px 10px; color: #94a3b8; font-size: .95rem; font-weight: 500; transition: color 160ms ease, background 160ms ease; }
 .landing-nav-link::after { position: absolute; right: 10px; bottom: 4px; left: 10px; height: 1px; content: ""; background: #6ee7b7; transform: scaleX(0); transition: transform 160ms ease; }
 .landing-nav-link:hover { color: #f8fafc; }
 .landing-nav-link[data-active="true"] { color: #a7f3d0; }
 .landing-nav-link:hover::after, .landing-nav-link[data-active="true"]::after { transform: scaleX(1); }
-.landing-nav-cta { display: none; min-height: 36px; align-items: center; justify-content: center; gap: 7px; border: 1px solid rgba(110,231,183,.42); border-radius: 7px; background: #6ee7b7; padding: 0 13px; color: #04110d; font-size: .78rem; font-weight: 680; transition: background 160ms ease, transform 160ms ease; }
+.landing-nav-cta { display: none; min-height: 40px; align-items: center; justify-content: center; gap: 9px; border: 1px solid rgba(110,231,183,.42); border-radius: 7px; background: #6ee7b7; padding: 0 15px; color: #04110d; font-size: .9rem; font-weight: 680; transition: background 160ms ease, transform 160ms ease; }
 .landing-nav-cta:hover { background: #9ff3d1; transform: translateY(-1px); }
-.landing-github-button { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 7px; margin-left: 8px; border: 1px solid rgba(255,255,255,.13); border-radius: 7px; background: rgba(255,255,255,.025); padding: 0 12px; color: #cbd5e1; font-size: .78rem; font-weight: 600; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
+.landing-github-button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 9px; margin-left: 8px; border: 1px solid rgba(255,255,255,.13); border-radius: 7px; background: rgba(255,255,255,.025); padding: 0 14px; color: #cbd5e1; font-size: .9rem; font-weight: 600; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
 .landing-github-button:hover { border-color: rgba(110,231,183,.28); background: rgba(110,231,183,.055); color: #fff; }
 .landing-menu-button { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--border); border-radius: 7px; color: #cbd5e1; }
-.landing-mobile-menu { position: absolute; top: 66px; right: 0; left: 0; border-bottom: 1px solid var(--border); background: rgba(8,11,13,.98); padding: 10px 20px 18px; box-shadow: 0 24px 50px rgba(0,0,0,.35); }
+.landing-mobile-menu { position: absolute; top: 102px; right: 0; left: 0; border-bottom: 1px solid var(--border); background: rgba(8,11,13,.98); padding: 10px 20px 18px; box-shadow: 0 24px 50px rgba(0,0,0,.35); }
 .landing-mobile-menu nav { display: grid; gap: 2px; }
-.landing-mobile-menu a { display: flex; min-height: 42px; align-items: center; border-radius: 6px; padding-inline: 10px; color: #cbd5e1; font-size: .875rem; }
+.landing-mobile-menu a { display: flex; min-height: 42px; align-items: center; border-radius: 6px; padding-inline: 10px; color: #cbd5e1; font-size: 1rem; }
 .landing-mobile-menu a:hover { background: rgba(255,255,255,.04); color: white; }
 .landing-mobile-menu .landing-mobile-cta { justify-content: center; gap: 8px; margin-top: 8px; border: 1px solid rgba(110,231,183,.35); background: #6ee7b7; color: #04110d; font-weight: 650; }
 .landing-mobile-menu .landing-mobile-github { justify-content: center; gap: 8px; margin-top: 8px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.025); }
@@ -1096,8 +1108,6 @@ samp {
 .final-cta h2 { margin-top: 14px; max-width: 620px; color: white; font-size: clamp(2.25rem,4vw,3.5rem); font-weight: 650; line-height: 1.1; }
 .final-cta-copy { max-width: 620px; margin-top: 16px; color: #b8c4d2; font-size: 1.05rem; line-height: 1.65; }
 .footer-grid { display: grid; gap: 24px; }
-.footer-brand { display: inline-flex; align-items: center; gap: 10px; color: #f1f5f9; font-size: 1rem; font-weight: 650; }
-.footer-brand span { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid rgba(110,231,183,.25); border-radius: 7px; background: rgba(110,231,183,.08); color: #6ee7b7; }
 .footer-description { max-width: 420px; margin-top: 12px; color: #94a3b8; font-size: .9375rem; line-height: 1.55; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; color: #b8c4d2; }
 .footer-meta { color: #64748b; }
@@ -1111,8 +1121,8 @@ samp {
 @media (min-width: 1024px) {
   .landing-nav-shell { grid-template-columns: minmax(180px,1fr) auto minmax(180px,1fr); }
   .landing-desktop-nav { display: contents; }
-  .landing-nav-links { display: flex; grid-column: 2; align-items: center; justify-content: center; gap: 4px; }
-  .landing-nav-actions { display: flex; grid-column: 3; align-items: center; justify-self: end; gap: 8px; }
+  .landing-nav-links { display: flex; grid-column: 2; align-items: center; justify-content: center; gap: 12px; }
+  .landing-nav-actions { display: flex; grid-column: 3; align-items: center; justify-self: end; gap: 12px; }
   .landing-github-button { margin-left: 0; }
 }
 

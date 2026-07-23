@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { LandingNavigation } from "@/components/landing-navigation";
 import { CopyCodeButton } from "@/components/copy-code-button";
+import { SiteBrand } from "@/components/site-brand";
 export { DocsSidebar, MobileDocsNav } from "@/components/docs-sidebar";
 import { highlightCode, inferCodeLanguage } from "@/lib/code-highlight";
 
@@ -92,7 +93,7 @@ export function Footer({ contained = false, githubUrl }: { contained?: boolean; 
       }
     >
       <div className={contained ? "footer-grid" : "footer-grid mx-auto max-w-7xl"}>
-        <div><Link href="/" className="footer-brand"><span><MemoryStick className="h-4 w-4" /></span>MemoGrafter</Link><p className="footer-description">Open-source memory infrastructure for TypeScript AI agents.</p></div>
+        <div><SiteBrand /><p className="footer-description">Open-source memory infrastructure for TypeScript AI agents.</p></div>
         <div className="footer-links">
           <Link href="/docs" className="transition-colors hover:text-emerald-200">
             Docs

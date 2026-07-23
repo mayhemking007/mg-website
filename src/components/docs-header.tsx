@@ -1,9 +1,10 @@
 "use client";
 
-import { MemoryStick, Menu, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { DocsSearch } from "@/components/docs-search";
+import { SiteBrand } from "@/components/site-brand";
 import type { DocSearchRecord } from "@/lib/docs/search";
 
 const githubUrl = "https://github.com/mayhemking007/memo-grafter";
@@ -59,14 +60,9 @@ export function DocsHeader({ searchRecords }: { searchRecords: DocSearchRecord[]
 
       <div className="docs-header-shell">
         <div className="flex min-w-0 items-center">
-          <Link href="/" className="flex shrink-0 items-center gap-2.5 text-white" aria-label="MemoGrafter home">
-            <span className="grid h-8 w-8 place-items-center rounded-md border border-emerald-300/30 bg-emerald-300/10">
-              <MemoryStick className="h-4 w-4 text-emerald-300" />
-            </span>
-            <span className="hidden text-sm font-semibold sm:inline">MemoGrafter</span>
-          </Link>
-          <span className="mx-3 h-5 w-px bg-white/15" aria-hidden="true" />
-          <Link href="/docs" className="truncate text-sm font-medium text-slate-300 transition-colors hover:text-white">
+          <SiteBrand />
+          <span className="docs-product-label mx-3 h-5 w-px bg-white/15" aria-hidden="true" />
+          <Link href="/docs" className="docs-product-label truncate text-base font-medium text-slate-300 transition-colors hover:text-white">
             Documentation
           </Link>
         </div>
