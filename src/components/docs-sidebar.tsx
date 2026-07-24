@@ -222,8 +222,8 @@ function DocsGroups({
           aria-expanded={isOpen}
           aria-controls={groupId}
           onClick={() => toggleGroup(group.title)}
-          className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-medium uppercase tracking-[0.14em] transition-colors hover:bg-white/[0.04] hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
-            isOpen ? "bg-emerald-300/[0.07] text-emerald-100" : "text-slate-400"
+          className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-medium uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
+            isOpen ? "bg-emerald-300/[0.07]" : ""
           }`}
         >
           <ChevronRight
@@ -271,8 +271,8 @@ function DocsNodes({
                 aria-expanded={isOpen}
                 aria-controls={contentId}
                 onClick={() => toggleGroup(item.id)}
-                className={`flex w-full items-center gap-2 rounded-md py-2 pr-3 text-left text-xs font-medium tracking-[0.08em] transition-colors hover:bg-white/[0.04] hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
-                  isOpen ? "bg-emerald-300/[0.07] text-emerald-100" : "text-slate-400"
+                className={`flex w-full items-center gap-2 rounded-md py-2 pr-3 text-left text-xs font-medium tracking-[0.08em] text-white transition-colors hover:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${
+                  isOpen ? "bg-emerald-300/[0.07]" : ""
                 }`}
                 style={{ paddingLeft: `${12 + depth * 12}px` }}
               >
@@ -315,7 +315,6 @@ export function DocsSidebar({ items, groups }: DocsNavigationProps) {
   const activeHref = usePathname();
   const navGroups = groups ?? [{ title: "Docs", items }];
   const sidebarRef = useRef<HTMLElement>(null);
-  const navigationFromSidebarRef = useRef(false);
   const idPrefix = useId();
   const { openGroups, toggleGroup } = useOpenGroups(navGroups, activeHref);
 
@@ -326,28 +325,9 @@ export function DocsSidebar({ items, groups }: DocsNavigationProps) {
     if (sidebar && storedPosition !== null) sidebar.scrollTop = Number(storedPosition);
   }, []);
 
-  useLayoutEffect(() => {
-    if (navigationFromSidebarRef.current) {
-      navigationFromSidebarRef.current = false;
-      return;
-    }
-
-    const sidebar = sidebarRef.current;
-    const activeLink = sidebar?.querySelector<HTMLElement>('[data-active="true"]');
-
-    if (!sidebar || !activeLink) return;
-
-    activeLink.scrollIntoView({ block: "nearest" });
-  }, [activeHref, openGroups]);
-
   function preserveScrollPosition() {
     const sidebar = sidebarRef.current;
     if (sidebar) window.sessionStorage.setItem(scrollStorageKey, String(sidebar.scrollTop));
-  }
-
-  function handleNavigate() {
-    navigationFromSidebarRef.current = true;
-    preserveScrollPosition();
   }
 
   return (
@@ -366,7 +346,7 @@ export function DocsSidebar({ items, groups }: DocsNavigationProps) {
           activeHref={activeHref}
           openGroups={openGroups}
           toggleGroup={toggleGroup}
-          onNavigate={handleNavigate}
+          onNavigate={preserveScrollPosition}
           idPrefix={idPrefix}
         />
       </nav>
