@@ -13,7 +13,6 @@ export const additionalAdvancedPages: DocPage[] = [
   minSimilarity: 0.55,
   hopDepth: 1,
 });
-
 const plan = await llm.complete(
   [{ role: "user", content: nextTask }],
   memory.systemPrompt,
@@ -34,10 +33,8 @@ const crawler = new MemoGrafterCrawler({
   store: memo.store,
   intervalMs: 60_000,
 });
-
 const report = await crawler.runOnce();
 console.log(report);
-
 crawler.start();
 // During shutdown:
 crawler.stop();
@@ -111,7 +108,6 @@ await memo.close();` }] },
   await agent?.close();
   await memo?.close();
 }
-
 process.once("SIGTERM", shutdown);
 process.once("SIGINT", shutdown);` }], body: ["Only close resources owned by the current component; avoid closing the same shared core through several wrappers."] },
     { title: "Observability", bullets: ["Foreground invoke latency and first-token time.", "Recall latency, empty-result rate, selected fact count, and prompt size.", "Ingestion lag, queue depth, failed jobs, and retry count.", "Provider request latency, rate limits, and usage.", "Database pool saturation, vector-search latency, and migration status.", "Lifecycle actions and cross-session transfer audit events."] },

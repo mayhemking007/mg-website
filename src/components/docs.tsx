@@ -2,54 +2,11 @@ import { ArrowLeft, ArrowRight, BookOpen, CircleDot, Clock3, Gauge } from "lucid
 import Link from "next/link";
 import type React from "react";
 import { OnThisPage } from "@/components/on-this-page";
-import { DocsHeader } from "@/components/docs-header";
-import {
-  CodeBlock,
-  DocsSidebar,
-  Footer,
-  MobileDocsNav,
-} from "@/components/site";
-import {
-  type DocPage,
-  docsNavGroups,
-  docsNavItems,
-  getAdjacentDocs,
-} from "@/lib/docs";
-import { docsSearchIndex } from "@/lib/docs/search";
+import { CodeBlock, Footer } from "@/components/site";
+import { type DocPage, getAdjacentDocs } from "@/lib/docs";
 import { getDocSectionId } from "@/lib/docs/section-id";
 
-export function DocsFrame({
-  activeHref,
-  children,
-  tocSections,
-}: {
-  activeHref: string;
-  children: React.ReactNode;
-  tocSections: Array<{ id: string; title: string }>;
-}) {
-  return (
-    <main className="site-shell">
-      <DocsHeader searchRecords={docsSearchIndex} />
-
-      <div className="docs-layout mx-auto grid max-w-[1680px] gap-8 px-4 py-7 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-8 xl:grid-cols-[250px_minmax(0,1fr)_220px] xl:gap-16">
-        <div>
-          <DocsSidebar groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
-          <MobileDocsNav groups={docsNavGroups} items={docsNavItems} activeHref={activeHref} />
-        </div>
-
-        <article id="docs-content" className="min-w-0">
-          {children}
-          <Footer contained />
-        </article>
-
-        <OnThisPage sections={tocSections} />
-      </div>
-    </main>
-  );
-}
-
 export function DocsArticle({ page }: { page: DocPage }) {
-  const activeHref = page.slug ? `/docs/${page.slug}` : "/docs";
   const adjacent = getAdjacentDocs(page.slug);
   const tocSections = page.sections.map((section) => ({
     id: getDocSectionId(section.title),
@@ -57,8 +14,9 @@ export function DocsArticle({ page }: { page: DocPage }) {
   }));
 
   return (
-    <DocsFrame activeHref={activeHref} tocSections={tocSections}>
-      <header className="pb-6 pt-2 lg:pt-5">
+    <>
+      <article id="docs-content" className="min-w-0">
+        <header className="pb-6 pt-2 lg:pt-5">
         <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
           <Link href="/docs" className="transition-colors hover:text-slate-300">
             Docs
@@ -99,9 +57,9 @@ export function DocsArticle({ page }: { page: DocPage }) {
             ) : null}
           </div>
         ) : null}
-      </header>
+        </header>
 
-      <div>
+        <div>
         {page.sections.map((section) => (
           <section
             key={section.title}
@@ -178,8 +136,12 @@ export function DocsArticle({ page }: { page: DocPage }) {
             </Link>
           ) : null}
         </nav>
-      </div>
-    </DocsFrame>
+        </div>
+        <Footer contained />
+      </article>
+
+      <OnThisPage sections={tocSections} />
+    </>
   );
 }
 
@@ -245,6 +207,12 @@ function DocsDiagram({ type }: { type: NonNullable<DocPage["sections"][number]["
     "streaming-flow": ["Recall first", "Start provider stream", "Collect final text", "Ingest completed turn"],
     "fleet-flow": ["Worker memory", "Fleet shared memory", "Conductor selection", "Target worker"],
     "reentry-flow": ["Original topic", "Different topic", "Return to subject", "Reentry edge"],
+    "example-chatbot-flow": ["User turn", "Recall active facts", "LLM response", "Incremental ingest", "Later recall"],
+    "example-support-flow": ["Customer context", "Support worker", "Shared policy", "Combined response"],
+    "example-assistant-flow": ["Explicit preferences", "Tagged session", "Targeted recall", "Planning response", "Lifecycle control"],
+    "example-journal-flow": ["Dated entries", "Source sessions", "Topics and memories", "Authorized tagged recall"],
+    "example-research-flow": ["Source documents", "Tagged source sessions", "Evidence recall", "Bounded synthesis"],
+    "example-multi-agent-flow": ["Research worker", "Conductor transfer", "Writing worker", "Shared fleet policy"],
   } satisfies Record<string, string[]>;
 
   const nodes = diagrams[type];

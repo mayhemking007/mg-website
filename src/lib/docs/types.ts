@@ -21,7 +21,13 @@ export type DocSection = {
     | "scope-flow"
     | "streaming-flow"
     | "fleet-flow"
-    | "reentry-flow";
+    | "reentry-flow"
+    | "example-chatbot-flow"
+    | "example-support-flow"
+    | "example-assistant-flow"
+    | "example-journal-flow"
+    | "example-research-flow"
+    | "example-multi-agent-flow";
 };
 
 export type DocGuideMeta = {

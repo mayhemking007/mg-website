@@ -57,13 +57,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import type { DocNavGroup, DocNavIcon, DocNavNode } from "@/lib/docs";
 
 type DocsNavigationProps = {
   items: DocNavNode[];
   groups?: DocNavGroup[];
-  activeHref?: string;
 };
 
 const scrollStorageKey = "memo-grafter-docs-sidebar-scroll";
@@ -311,9 +311,11 @@ function DocsNodes({
   );
 }
 
-export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) {
+export function DocsSidebar({ items, groups }: DocsNavigationProps) {
+  const activeHref = usePathname();
   const navGroups = groups ?? [{ title: "Docs", items }];
   const sidebarRef = useRef<HTMLElement>(null);
+  const navigationFromSidebarRef = useRef(false);
   const idPrefix = useId();
   const { openGroups, toggleGroup } = useOpenGroups(navGroups, activeHref);
 
@@ -322,24 +324,30 @@ export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) 
     const storedPosition = window.sessionStorage.getItem(scrollStorageKey);
 
     if (sidebar && storedPosition !== null) sidebar.scrollTop = Number(storedPosition);
-  }, [activeHref]);
+  }, []);
 
   useLayoutEffect(() => {
+    if (navigationFromSidebarRef.current) {
+      navigationFromSidebarRef.current = false;
+      return;
+    }
+
     const sidebar = sidebarRef.current;
     const activeLink = sidebar?.querySelector<HTMLElement>('[data-active="true"]');
 
     if (!sidebar || !activeLink) return;
 
-    const sidebarRect = sidebar.getBoundingClientRect();
-    const linkRect = activeLink.getBoundingClientRect();
-
-    if (linkRect.top < sidebarRect.top) sidebar.scrollTop -= sidebarRect.top - linkRect.top + 8;
-    else if (linkRect.bottom > sidebarRect.bottom) sidebar.scrollTop += linkRect.bottom - sidebarRect.bottom + 8;
+    activeLink.scrollIntoView({ block: "nearest" });
   }, [activeHref, openGroups]);
 
   function preserveScrollPosition() {
     const sidebar = sidebarRef.current;
     if (sidebar) window.sessionStorage.setItem(scrollStorageKey, String(sidebar.scrollTop));
+  }
+
+  function handleNavigate() {
+    navigationFromSidebarRef.current = true;
+    preserveScrollPosition();
   }
 
   return (
@@ -358,7 +366,7 @@ export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) 
           activeHref={activeHref}
           openGroups={openGroups}
           toggleGroup={toggleGroup}
-          onNavigate={preserveScrollPosition}
+          onNavigate={handleNavigate}
           idPrefix={idPrefix}
         />
       </nav>
@@ -366,7 +374,8 @@ export function DocsSidebar({ items, groups, activeHref }: DocsNavigationProps) 
   );
 }
 
-export function MobileDocsNav({ items, groups, activeHref }: DocsNavigationProps) {
+export function MobileDocsNav({ items, groups }: DocsNavigationProps) {
+  const activeHref = usePathname();
   const navGroups = groups ?? [{ title: "Docs", items }];
   const idPrefix = useId();
   const { openGroups, toggleGroup } = useOpenGroups(navGroups, activeHref);

@@ -11,6 +11,7 @@ import { expandedDocsPages } from "./expanded-pages";
 import { apiReferencePages } from "./api-reference";
 import { guidePages } from "./guide-pages";
 import { additionalAdvancedPages } from "./advanced-pages";
+import { examplePages } from "./example-pages";
 
 const existingDocsPages: DocPage[] = [
   {
@@ -1019,8 +1020,13 @@ const lockedSlugs = new Set([
 
 export const docsPages: DocPage[] = [
   ...existingDocsPages.filter((page) => lockedSlugs.has(page.slug)),
-  ...expandedDocsPages.filter((page) => !page.slug.startsWith("api-reference/") && !page.slug.startsWith("guides/")),
+  ...expandedDocsPages.filter((page) =>
+    !page.slug.startsWith("api-reference/")
+    && !page.slug.startsWith("guides/")
+    && !page.slug.startsWith("examples/")
+  ),
   ...guidePages,
+  ...examplePages,
   ...additionalAdvancedPages,
   ...apiReferencePages,
 ];
