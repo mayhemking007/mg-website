@@ -60,7 +60,7 @@ export function DocsHeader({ searchRecords }: { searchRecords: DocSearchRecord[]
 
       <div className="docs-header-shell">
         <div className="flex min-w-0 items-center">
-          <SiteBrand />
+          <SiteBrand eager />
           <span className="docs-product-label mx-3 h-5 w-px bg-white/15" aria-hidden="true" />
           <Link href="/docs" className="docs-product-label truncate text-base font-medium text-slate-300 transition-colors hover:text-white">
             Documentation

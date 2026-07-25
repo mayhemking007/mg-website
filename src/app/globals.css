@@ -1105,6 +1105,7 @@ samp {
 /* Compact closing banner and richer footer */
 .cta-section { padding-top: clamp(2rem, 4vw, 4rem); }
 .final-cta { position: relative; grid-template-columns: 1fr; padding: clamp(1.75rem,4vw,3.5rem); background: radial-gradient(circle at 88% 15%, rgba(110,231,183,.13), transparent 22rem), linear-gradient(120deg, rgba(110,231,183,.07), transparent 50%), #0b1213; }
+.final-cta > * { min-width: 0; }
 .final-cta h2 { margin-top: 14px; max-width: 620px; color: white; font-size: clamp(2.25rem,4vw,3.5rem); font-weight: 650; line-height: 1.1; }
 .final-cta-copy { max-width: 620px; margin-top: 16px; color: #b8c4d2; font-size: 1.05rem; line-height: 1.65; }
 .footer-grid { display: grid; gap: 24px; }
@@ -1167,6 +1168,66 @@ samp {
   .hero-actions .btn-primary, .hero-actions .btn-secondary { width: 100%; }
   .hero-capabilities { align-items: flex-start; }
   .hero-capabilities li + li::before { margin-inline: .55rem; }
+}
+
+@media (max-width: 399px) {
+  .landing-nav-shell {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding-inline: 12px;
+  }
+
+  .landing-brand-logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .landing-brand-wordmark {
+    font-size: 1.3rem;
+    letter-spacing: .02em;
+  }
+
+  .landing-brand-initial {
+    font-size: 1.65rem;
+  }
+
+  .landing-menu-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cta-section {
+    padding-inline: 14px;
+  }
+
+  .final-cta {
+    gap: 22px;
+    padding: 22px;
+  }
+
+  .final-cta h2 {
+    font-size: 2rem;
+  }
+
+  .final-cta-copy {
+    font-size: 1rem;
+  }
+
+  .final-cta .install-command {
+    width: 100%;
+    min-width: 0;
+    padding-left: 10px;
+  }
+
+  .final-cta .install-command code {
+    min-width: 0;
+    font-size: .75rem;
+  }
+
+  .final-cta .install-command button {
+    width: 40px;
+    flex: 0 0 40px;
+  }
 }
 
 /* Interactive How It Works pipeline */

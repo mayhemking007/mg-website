@@ -1,7 +1,8 @@
 {
-  "name": "mg-website",
+  "name": "MemoGrafter-web",
   "version": "0.1.0",
   "private": true,
+  "author": "Sarthak Chaturvedi <sarthakchat2018@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

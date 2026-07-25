@@ -63,7 +63,7 @@ export function LandingNavigation({ githubUrl }: { githubUrl: string }) {
   return (
     <header className="landing-header">
       <div className="landing-nav-shell">
-        <SiteBrand animated />
+        <SiteBrand animated eager />
 
         <nav className="landing-desktop-nav" aria-label="Primary navigation">
           <div className="landing-nav-links">{links.map((link) => (
