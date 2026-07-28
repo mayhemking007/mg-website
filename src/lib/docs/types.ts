@@ -8,6 +8,10 @@ export type DocSection = {
   title: string;
   body?: string[];
   bullets?: string[];
+  warning?: {
+    title: string;
+    body: string;
+  };
   links?: DocRelatedLink[];
   code?: DocCodeBlock[];
   diagram?:

@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, BookOpen, CircleDot, Clock3, Gauge } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ArrowRight, BookOpen, CircleDot, Clock3, Gauge } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { OnThisPage } from "@/components/on-this-page";
@@ -82,6 +82,15 @@ export function DocsArticle({ page }: { page: DocPage }) {
                     <span>{renderInlineCode(item)}</span>
                   </div>
                 ))}
+              </div>
+            ) : null}
+            {section.warning ? (
+              <div role="alert" className="mt-5 flex gap-3 rounded-lg border border-rose-300/25 bg-rose-300/[0.07] p-4 text-rose-100">
+                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+                <div>
+                  <p className="font-semibold text-white">{section.warning.title}</p>
+                  <p className="mt-1 leading-7 text-rose-100/85">{renderInlineCode(section.warning.body)}</p>
+                </div>
               </div>
             ) : null}
             {section.links ? (
