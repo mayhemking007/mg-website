@@ -12,6 +12,7 @@ import { apiReferencePages } from "./api-reference";
 import { guidePages } from "./guide-pages";
 import { additionalAdvancedPages } from "./advanced-pages";
 import { examplePages } from "./example-pages";
+import { contributorPages } from "./contributor-pages";
 
 const existingDocsPages: DocPage[] = [
   {
@@ -1206,6 +1207,7 @@ export const docsPages: DocPage[] = [
   ),
   ...guidePages,
   ...examplePages,
+  ...contributorPages,
   ...additionalAdvancedPages,
   ...apiReferencePages,
 ];
