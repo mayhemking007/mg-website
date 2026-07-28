@@ -127,6 +127,101 @@ export const expandedDocsPages: DocPage[] = [
   cliPage("studio", "studio", "Start the local MemoGrafter Studio server.", `npx memo-grafter studio`, ["Verifies the database schema before serving Studio.", "Uses localhost port 2891 or the next available port.", "Resolves database settings from flags, environment, and generated config."]),
   cliPage("init", "init", "Generate the project-local MemoGrafter schema and configuration files.", `npx memo-grafter init`, ["Creates files under `src/memo-grafter/`.", "Keeps generated memory configuration reviewable in source control.", "Does not migrate the database."]),
   cliPage("migrate", "migrate", "Create or update MemoGrafter-owned PostgreSQL infrastructure.", `npx memo-grafter migrate`, ["Requires a reachable PostgreSQL database.", "Manages required extensions and `mg_*` tables only.", "Application-owned tables remain in the application migration system."]),
+  page("cli/doctor", "doctor", "Verify that MemoGrafter, its configuration, PostgreSQL schema, pgvector, and optional recall cache are ready.", "CLI", [
+    {
+      title: "Purpose",
+      body: [
+        "Run Doctor after migration or whenever an environment stops behaving as expected. It performs read-only diagnostics and does not modify your configuration, database, or cache.",
+        "Doctor does not require the normal initialization gate before starting. Missing configuration is reported as a required failure while independent checks continue where possible.",
+      ],
+    },
+    {
+      title: "Run Doctor",
+      code: [{ label: "terminal", language: "bash", code: "npx memo-grafter doctor" }],
+    },
+    {
+      title: "Checks performed",
+      bullets: [
+        "The active Node.js version and installed MemoGrafter version.",
+        "Whether MemoGrafter configuration files and `DATABASE_URL` are available.",
+        "PostgreSQL connectivity and the server version.",
+        "Whether pgvector is available on the PostgreSQL server and enabled in the selected database.",
+        "Whether `mg_migrations` exists and records the current MemoGrafter migration version.",
+        "Whether all required core MemoGrafter tables exist.",
+        "Redis reachability only when recall caching is configured through `cache.connectionString`.",
+      ],
+    },
+    {
+      title: "Database resolution order",
+      body: [
+        "Doctor resolves the database exactly as migration does. The first available value wins:",
+      ],
+      bullets: [
+        "The `--db` command-line option.",
+        "The project `.env` file or `DATABASE_URL` environment variable.",
+        "`src/memo-grafter/mg.config.ts`.",
+        "Root `mg.config.ts`.",
+      ],
+    },
+    {
+      title: "Override the database",
+      body: [
+        "Use `--db` to diagnose a specific database without changing project configuration. Doctor uses the supplied connection string but never prints it in the report.",
+      ],
+      code: [
+        {
+          label: "terminal",
+          language: "bash",
+          code: "npx memo-grafter doctor --db postgres://postgres:postgres@localhost:5432/memo_grafter",
+        },
+      ],
+    },
+    {
+      title: "Dependency-aware checks",
+      body: [
+        "Checks run in dependency order. If PostgreSQL cannot be reached, Doctor reports that required failure and marks pgvector, migration, and schema checks as skipped instead of producing misleading secondary failures.",
+      ],
+      bullets: [
+        "`passed`: the check completed successfully.",
+        "`failed`: a required readiness check did not pass.",
+        "`warning`: an optional integration is unavailable or degraded.",
+        "`skipped`: a prerequisite was unavailable or the optional feature is not configured.",
+      ],
+    },
+    {
+      title: "Optional Redis behavior",
+      body: [
+        "Redis is optional in the current Doctor implementation. PostgreSQL-backed recall remains available when an optional recall cache cannot be reached.",
+      ],
+      bullets: [
+        "An unconfigured recall cache is skipped.",
+        "A reachable cache configured through `cache.connectionString` passes its Redis `PING` check.",
+        "An unreachable configured cache produces a warning, not a required failure.",
+        "`REDIS_URL` alone is not active recall-cache configuration and does not trigger the Redis check.",
+      ],
+    },
+    {
+      title: "Exit codes",
+      bullets: [
+        "`0`: all required checks passed.",
+        "`1`: one or more required checks failed.",
+        "`2`: invalid command usage, such as an unknown option or `--db` without a value.",
+        "Optional Redis warnings do not produce exit code `1`.",
+      ],
+      body: [
+        "Doctor stores checks internally as structured `passed`, `failed`, `warning`, or `skipped` results so future output modes can reuse the same diagnostics.",
+      ],
+    },
+    {
+      title: "Troubleshooting",
+      bullets: [
+        "Run Doctor from the server-side package that contains MemoGrafter.",
+        "Run `npx memo-grafter migrate` before diagnosing a new database.",
+        "Confirm the expected `.env` file and configuration files are available from the current working directory.",
+        "Use `npx memo-grafter doctor --help` to inspect options supported by the installed package version.",
+      ],
+    },
+  ]),
   cliPage("config", "config", "Understand generated configuration and CLI resolution rules.", `npx memo-grafter init`, ["CLI flags take precedence when supported.", "Environment variables are resolved next.", "Generated `src/memo-grafter/mg.config.ts` supplies project defaults.", "Keep secrets out of committed configuration."]),
   page("cli/environment-variables", "Environment variables", "Configure database, providers, Redis, and local tooling.", "CLI", [{ title: "Variables", code: [{ label: ".env", code: `DATABASE_URL=postgres://...\nOPENAI_API_KEY=...\nANTHROPIC_API_KEY=...\nGEMINI_API_KEY=...\nREDIS_URL=redis://localhost:6379` }] }, { title: "When they are required", bullets: ["`DATABASE_URL` configures the built-in PostgreSQL store and CLI.", "Provider keys are required only for adapters you use.", "`REDIS_URL` is required for queue mode or the optional recall cache."] }, { title: "Security", body: ["Load secrets only in the server environment and exclude local environment files from source control."] }]),
 

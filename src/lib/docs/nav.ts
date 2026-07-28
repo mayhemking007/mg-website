@@ -76,6 +76,7 @@ export const docsNavGroups: DocNavGroup[] = [
       { href: "/docs/cli/studio", label: "studio", icon: "square-terminal" },
       { href: "/docs/cli/init", label: "init", icon: "file-plus" },
       { href: "/docs/cli/migrate", label: "migrate", icon: "database" },
+      { href: "/docs/cli/doctor", label: "doctor", icon: "search-check" },
       { href: "/docs/cli/config", label: "config", icon: "sliders" },
       { href: "/docs/cli/environment-variables", label: "Environment Variables", icon: "key-round" },
     ],
