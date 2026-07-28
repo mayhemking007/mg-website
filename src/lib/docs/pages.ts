@@ -62,6 +62,184 @@ const existingDocsPages: DocPage[] = [
     ],
   },
   {
+    slug: "database-setup-with-docker",
+    eyebrow: "Getting started",
+    title: "Database setup with Docker",
+    description:
+      "Run a local PostgreSQL database with pgvector for MemoGrafter using a minimal Docker Compose setup.",
+    sections: [
+      {
+        title: "Prerequisites",
+        bullets: [
+          "Docker Desktop, or Docker Engine with the Compose plugin.",
+          "A free local port for PostgreSQL. This guide uses `5432`.",
+        ],
+      },
+      {
+        title: "Compose file without Redis",
+        body: [
+          "For normal package usage, create `compose.yml` in your application directory with only PostgreSQL and pgvector. Redis is optional and is not required to run MemoGrafter.",
+        ],
+        code: [
+          {
+            label: "compose.yml",
+            language: "yaml",
+            code: `services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: memografter
+      POSTGRES_PASSWORD: memografter
+      POSTGRES_DB: memografter
+    ports:
+      - "5432:5432"
+    volumes:
+      - memografter_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memografter -d memografter"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  memografter_postgres_data:`,
+          },
+        ],
+      },
+      {
+        title: "Compose file with Redis",
+        body: [
+          "Contributors, or package users testing queue mode and the optional recall cache, can use this expanded `compose.yml`. It keeps the same PostgreSQL setup and adds Redis.",
+          "Set `REDIS_URL=redis://localhost:6379` only when enabling a Redis-backed MemoGrafter feature.",
+        ],
+        code: [
+          {
+            label: "compose.yml",
+            language: "yaml",
+            code: `services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: memografter
+      POSTGRES_PASSWORD: memografter
+      POSTGRES_DB: memografter
+    ports:
+      - "5432:5432"
+    volumes:
+      - memografter_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memografter -d memografter"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - memografter_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  memografter_postgres_data:
+  memografter_redis_data:`,
+          },
+        ],
+      },
+      {
+        title: "Start PostgreSQL",
+        body: [
+          "Start the container in the background. Docker downloads the image automatically the first time.",
+        ],
+        code: [{ label: "terminal", language: "bash", code: "docker compose up -d" }],
+      },
+      {
+        title: "Configure MemoGrafter",
+        body: [
+          "Set `DATABASE_URL` in your server environment. Its username, password, port, and database name must match the Compose file.",
+        ],
+        code: [
+          {
+            label: ".env",
+            code: "DATABASE_URL=postgresql://memografter:memografter@localhost:5432/memografter",
+          },
+        ],
+      },
+      {
+        title: "Initialize and migrate",
+        body: [
+          "Initialize MemoGrafter, then create or update its database schema. The migration manages MemoGrafter-owned tables and enables required PostgreSQL extensions, including `vector`.",
+        ],
+        code: [
+          {
+            label: "terminal",
+            language: "bash",
+            code: `npx memo-grafter init
+npx memo-grafter migrate`,
+          },
+        ],
+      },
+      {
+        title: "Verify the setup",
+        body: [
+          "Run the doctor command to check the configuration and database connection.",
+        ],
+        code: [{ label: "terminal", language: "bash", code: "npx memo-grafter doctor" }],
+      },
+      {
+        title: "Common Docker commands",
+        code: [
+          {
+            label: "terminal",
+            language: "bash",
+            code: `# Show container status
+docker compose ps
+
+# Follow PostgreSQL logs
+docker compose logs -f postgres
+
+# Stop and remove the containers
+docker compose down`,
+          },
+        ],
+      },
+      {
+        title: "Reset the local database",
+        warning: {
+          title: "This permanently deletes your local database data",
+          body: "The `-v` flag removes the named PostgreSQL volume, including every MemoGrafter table and all locally stored memory. This cannot be undone unless you have a backup.",
+        },
+        body: [
+          "Use this only when you intentionally want a completely fresh local database, for example after changing the configured PostgreSQL credentials.",
+        ],
+        code: [{ label: "terminal", language: "bash", code: "docker compose down -v" }],
+      },
+      {
+        title: "Common failures",
+        bullets: [
+          "Port `5432` already in use: stop the other PostgreSQL service or map another host port, such as `5433:5432`, and use that port in `DATABASE_URL`.",
+          "Docker daemon not running: start Docker Desktop or the Docker Engine service, then retry `docker compose up -d`.",
+          "PostgreSQL container unhealthy: run `docker compose ps` and `docker compose logs postgres`; wait for startup to finish and check the environment values and available disk space.",
+          "`DATABASE_URL` mismatch: make its username, password, host port, and database name match `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and the Compose port mapping.",
+          "pgvector extension permission problem: run migrations as the database owner created by Compose. A restricted database user may not have permission to run `CREATE EXTENSION vector`.",
+          "Existing Docker volume with old credentials: PostgreSQL applies `POSTGRES_*` values only when initializing an empty data directory. Reuse the original credentials, or intentionally reset the volume after backing up any data you need.",
+        ],
+      },
+      {
+        title: "Package users and contributors",
+        body: [
+          "Package users should start with the PostgreSQL-only Compose file. It contains everything required for ordinary MemoGrafter usage.",
+          "The PostgreSQL-and-Redis Compose file is intended for contributors and users testing queue mode, caching, and integrations. Adding Redis does not make it mandatory for the rest of MemoGrafter.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "installation",
     eyebrow: "Setup",
     title: "Install MemoGrafter and prepare the database.",
@@ -1006,6 +1184,7 @@ ${studioCode}` }],
 const lockedSlugs = new Set([
   "",
   "installation",
+  "database-setup-with-docker",
   "quick-start",
   "environment-setup",
   "concepts/how-it-works",

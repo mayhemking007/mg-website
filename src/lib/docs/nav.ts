@@ -7,6 +7,7 @@ export const docsNavGroups: DocNavGroup[] = [
     items: [
       { href: "/docs", label: "Introduction", icon: "book-open" },
       { href: "/docs/installation", label: "Installation", icon: "download" },
+      { href: "/docs/database-setup-with-docker", label: "Database setup with Docker", icon: "database" },
       { href: "/docs/quick-start", label: "Quick Start", icon: "zap" },
       { href: "/docs/environment-setup", label: "Environment Setup", icon: "settings" },
     ],
