@@ -93,6 +93,16 @@ export const docsNavGroups: DocNavGroup[] = [
     ],
   },
   {
+    title: "Contributing",
+    items: [
+      { href: "/docs/contributing", label: "Overview", icon: "book-open" },
+      { href: "/docs/contributing/development-setup", label: "Development Setup", icon: "settings" },
+      { href: "/docs/contributing/project-structure", label: "Project Structure", icon: "blocks" },
+      { href: "/docs/contributing/creating-issues", label: "Creating Issues", icon: "circle-alert" },
+      { href: "/docs/contributing/testing-and-pull-requests", label: "Testing & Pull Requests", icon: "git-branch" },
+    ],
+  },
+  {
     title: "Advanced",
     items: [
       { href: "/docs/advanced/architecture", label: "Architecture", icon: "blocks" },
