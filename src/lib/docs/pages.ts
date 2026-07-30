@@ -267,9 +267,31 @@ docker compose down`,
       {
         title: "Initialize project files",
         body: [
-          "Create the generated MemoGrafter config and schema files. These files live under `src/memo-grafter/` so they are easy to review and keep separate from your application code.",
+          "Create the generated MemoGrafter config and schema files. These files live under `src/memo-grafter/` so they are easy to review, keep separate from your application code, and commit with the rest of your project.",
         ],
         code: [{ label: "terminal", code: initCode }],
+      },
+      {
+        title: "Generated files overview",
+        bullets: [
+          "`src/memo-grafter/mg.config.ts` contains project-level MemoGrafter settings, including the database connection and optional feature configuration.",
+          "`src/memo-grafter/mg.schema.ts` defines the MemoGrafter-managed database schema used by migration and other CLI tooling.",
+        ],
+        body: [
+          "Review both generated files after initialization. Keep secrets in environment variables rather than committing credentials in `mg.config.ts`.",
+        ],
+        links: [
+          {
+            label: "MemoGrafter schema",
+            href: "/docs/advanced/schema",
+            description: "Explore the generated schema, PostgreSQL extensions, managed tables, indexes, and migration boundary.",
+          },
+          {
+            label: "Environment setup",
+            href: "/docs/environment-setup",
+            description: "Configure the generated mg.config.ts file and its environment variables.",
+          },
+        ],
       },
       {
         title: "Create the database schema",
@@ -277,6 +299,20 @@ docker compose down`,
           "Run the migration command after setting `DATABASE_URL`. MemoGrafter owns only its `mg_*` tables and required PostgreSQL extensions.",
         ],
         code: [{ label: "terminal", code: migrateCode }],
+      },
+      {
+        title: "Verify the installation",
+        body: [
+          "Run Doctor after migration to verify the installed package, configuration, PostgreSQL connection, pgvector extension, migration state, and required MemoGrafter tables. Doctor performs read-only diagnostics and does not change your configuration or database.",
+        ],
+        code: [{ label: "terminal", language: "bash", code: "npx memo-grafter doctor" }],
+        links: [
+          {
+            label: "Doctor command reference",
+            href: "/docs/cli/doctor",
+            description: "Review every check, database resolution order, exit codes, and troubleshooting guidance.",
+          },
+        ],
       },
       {
         title: "Migration boundary",
@@ -310,12 +346,101 @@ REDIS_URL=redis://localhost:6379`,
         ],
       },
       {
+        title: "Generated mg.config.ts",
+        body: [
+          "`npx memo-grafter init` creates `src/memo-grafter/mg.config.ts`. The CLI loads this project-local file for database access, embeddings, and optional Redis-backed features.",
+          "The generated configuration reads credentials from the server environment. Commit the configuration structure, but never place database passwords, provider keys, or Redis credentials directly in the file.",
+        ],
+        code: [
+          {
+            label: "src/memo-grafter/mg.config.ts",
+            language: "ts",
+            code: `declare const process: {
+  env: {
+    DATABASE_URL?: string;
+    OPENAI_API_KEY?: string;
+    MEMO_GRAFTER_EMBEDDING_MODEL?: string;
+    REDIS_URL?: string;
+  };
+};
+const embeddingModel =
+  process.env.MEMO_GRAFTER_EMBEDDING_MODEL ?? "text-embedding-3-small";
+export default {
+  db: {
+    connectionString: process.env.DATABASE_URL,
+  },
+  // Optional recall cache. Falls back to PostgreSQL if Redis is unavailable.
+  // cache: process.env.REDIS_URL
+  //   ? { connectionString: process.env.REDIS_URL }
+  //   : undefined,
+  // Optional Redis-backed ingestion; failed enqueues do not retry synchronously.
+  // queue: process.env.REDIS_URL
+  //   ? { redisUrl: process.env.REDIS_URL }
+  //   : undefined,
+  // Set OPENAI_API_KEY or replace this object with your own embedder.
+  embedder: process.env.OPENAI_API_KEY
+    ? {
+        async embed(text: string): Promise<number[]> {
+          const response = await fetch(
+            "https://api.openai.com/v1/embeddings",
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                authorization: \`Bearer \${process.env.OPENAI_API_KEY}\`,
+              },
+              body: JSON.stringify({
+                model: embeddingModel,
+                input: text,
+              }),
+            },
+          );
+          if (!response.ok) {
+            throw new Error(
+              \`OpenAI embeddings request failed: \${response.status} \${await response.text()}\`,
+            );
+          }
+          const body = (await response.json()) as {
+            data?: Array<{ embedding?: number[] }>;
+          };
+          const embedding = body.data?.[0]?.embedding;
+          if (!embedding) {
+            throw new Error(
+              "OpenAI embeddings response did not include an embedding.",
+            );
+          }
+          return embedding;
+        },
+      }
+    : undefined,
+};`,
+          },
+        ],
+      },
+      {
+        title: "Configuration options",
+        bullets: [
+          "`db.connectionString` selects the PostgreSQL database used by migration, Doctor, Studio, and the built-in store.",
+          "`embedder` supplies the embeddings used for topic and memory similarity search. The generated example calls OpenAI only when `OPENAI_API_KEY` is available.",
+          "`MEMO_GRAFTER_EMBEDDING_MODEL` overrides the generated default embedding model, `text-embedding-3-small`.",
+          "`cache.connectionString` optionally enables the Redis recall cache. Recall falls back to PostgreSQL when Redis is unavailable.",
+          "`queue.redisUrl` optionally enables Redis-backed ingestion. Queue acceptance and retry behavior should be monitored separately from foreground responses.",
+        ],
+      },
+      {
         title: "Resolution order",
         bullets: [
-          "Studio and migration use `--db` first.",
-          "Then `.env` or `DATABASE_URL`.",
-          "Then `src/memo-grafter/mg.config.ts`.",
-          "The generated config can enable Studio Prompt Preview when `OPENAI_API_KEY` is set.",
+          "A supported CLI option such as `--db` takes precedence.",
+          "The project `.env` file or process environment is checked next.",
+          "The generated `src/memo-grafter/mg.config.ts` supplies project defaults and optional integrations.",
+          "Doctor, migration, and Studio follow the same database resolution order.",
+        ],
+        links: [
+          {
+            label: "CLI configuration reference",
+            href: "/docs/cli/config",
+            description: "Review configuration discovery and CLI precedence rules.",
+          },
         ],
       },
     ],
@@ -940,7 +1065,7 @@ class MyEmbedAdapter implements EmbedAdapter {
       {
         title: "Commands",
         bullets: [
-          "`memo-grafter init`: creates `src/memo-grafter/mg-schema.ts` and `mg.config.ts`.",
+          "`memo-grafter init`: creates `src/memo-grafter/mg.schema.ts` and `src/memo-grafter/mg.config.ts`.",
           "`memo-grafter migrate`: creates or updates MemoGrafter-owned `mg_*` database infrastructure.",
           "`memo-grafter studio`: verifies schema and starts local Studio on `localhost:2891` or the next available port.",
         ],
