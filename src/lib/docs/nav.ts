@@ -106,6 +106,7 @@ export const docsNavGroups: DocNavGroup[] = [
     title: "Advanced",
     items: [
       { href: "/docs/advanced/architecture", label: "Architecture", icon: "blocks" },
+      { href: "/docs/advanced/schema", label: "Schema", icon: "table" },
       { href: "/docs/advanced/memory-pipeline", label: "Memory Pipeline", icon: "workflow" },
       { href: "/docs/advanced/retrieval-pipeline", label: "Retrieval Pipeline", icon: "search-code" },
       { href: "/docs/advanced/long-running-agents", label: "Long-running Agents", icon: "timer" },
