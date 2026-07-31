@@ -498,6 +498,34 @@ npm run test:run`,
       ],
     },
     {
+      title: "Live smoke tests",
+      body: [
+        "Before releasing, or after changing a critical Grafter, ingestion, Fleet, crawler, or lifecycle workflow, run the minimal live smoke suite.",
+        "The suite uses the root `.env`; its basic chat, graph building, queue, and Fleet checks call OpenAI. Queue and recall-cache coverage runs when `REDIS_URL` is configured.",
+      ],
+      code: [
+        {
+          label: "Minimal live smoke suite",
+          language: "bash",
+          code: "npm run live-smoke:smoke",
+        },
+      ],
+    },
+    {
+      title: "Live smoke report",
+      body: [
+        "The `--write-doc` option saves a Markdown report containing timings, answers, drift scores, node counts, queue metrics, and estimated token usage.",
+        "See `tests/manual/live-smoke/README.md` for individual suite commands and reporting options.",
+      ],
+      code: [
+        {
+          label: "Markdown report",
+          language: "bash",
+          code: "npm run live-smoke:smoke -- --write-doc",
+        },
+      ],
+    },
+    {
       title: "Formatting, tests, and documentation",
       bullets: [
         "Add or update automated tests whenever behavior changes.",
