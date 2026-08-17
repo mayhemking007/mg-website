@@ -5,11 +5,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { DocsSearch } from "@/components/docs-search";
 import { SiteBrand } from "@/components/site-brand";
-import type { DocSearchRecord } from "@/lib/docs/search";
 
 const githubUrl = "https://github.com/mayhemking007/memo-grafter";
 
-export function DocsHeader({ searchRecords }: { searchRecords: DocSearchRecord[] }) {
+export function DocsHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const searchTriggerRef = useRef<HTMLButtonElement>(null);
@@ -73,7 +72,6 @@ export function DocsHeader({ searchRecords }: { searchRecords: DocSearchRecord[]
           }`}
         >
           <DocsSearch
-            records={searchRecords}
             overlay
             focusWhen={searchOpen}
             onNavigate={closePanels}

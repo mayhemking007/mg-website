@@ -125,7 +125,7 @@ export function DocsArticle({ page }: { page: DocPage }) {
 
         <nav className="grid gap-4 pb-10 pt-16 sm:grid-cols-2">
           {adjacent.previous ? (
-            <Link className="panel docs-pager-link flex items-center gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.previous.href}>
+            <Link prefetch={false} className="panel docs-pager-link flex items-center gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.previous.href}>
               <ArrowLeft className="h-4 w-4 text-sky-300" />
               <span>
                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Previous</span>
@@ -136,7 +136,7 @@ export function DocsArticle({ page }: { page: DocPage }) {
             <span />
           )}
           {adjacent.next ? (
-            <Link className="panel docs-pager-link flex items-center justify-between gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.next.href}>
+            <Link prefetch={false} className="panel docs-pager-link flex items-center justify-between gap-3 p-4 text-sm text-slate-300 hover:text-white" href={adjacent.next.href}>
               <span>
                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Next</span>
                 {adjacent.next.label}

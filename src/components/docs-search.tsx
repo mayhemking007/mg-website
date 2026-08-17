@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { DocSearchRecord } from "@/lib/docs/search";
 
 type RankedResult = DocSearchRecord & {
@@ -13,16 +13,17 @@ type RankedResult = DocSearchRecord & {
 const resultLimit = 8;
 
 export function DocsSearch({
-  records,
   onNavigate,
   overlay = false,
   focusWhen = false,
 }: {
-  records: DocSearchRecord[];
   onNavigate?: () => void;
   overlay?: boolean;
   focusWhen?: boolean;
 }) {
+  const [records, setRecords] = useState<DocSearchRecord[]>([]);
+  const [loadError, setLoadError] = useState(false);
+  const loadingRef = useRef<Promise<void> | null>(null);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -40,11 +41,32 @@ export function DocsSearch({
     return () => document.removeEventListener("mousedown", closeOnOutsideClick);
   }, []);
 
+  const loadRecords = useCallback(() => {
+    if (records.length || loadingRef.current) return loadingRef.current;
+
+    loadingRef.current = fetch("/docs-search.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`Search index request failed: ${response.status}`);
+        return response.json() as Promise<DocSearchRecord[]>;
+      })
+      .then((data) => {
+        setRecords(data);
+        setLoadError(false);
+      })
+      .catch(() => {
+        setLoadError(true);
+        loadingRef.current = null;
+      });
+
+    return loadingRef.current;
+  }, [records.length]);
+
   useEffect(() => {
     if (!focusWhen) return;
+    void loadRecords();
     const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
-  }, [focusWhen]);
+  }, [focusWhen, loadRecords]);
 
   function navigate() {
     setIsOpen(false);
@@ -87,8 +109,12 @@ export function DocsSearch({
           aria-expanded={showResults}
           aria-controls={showResults ? listboxId : undefined}
           aria-activedescendant={showResults && results[activeIndex] ? `${listboxId}-${activeIndex}` : undefined}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            setIsOpen(true);
+            void loadRecords();
+          }}
           onChange={(event) => {
+            void loadRecords();
             setQuery(event.target.value);
             setActiveIndex(0);
             setIsOpen(true);
@@ -131,6 +157,7 @@ export function DocsSearch({
                 aria-selected={index === activeIndex}
                 key={result.id}
                 href={result.href}
+                prefetch={false}
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 onClick={navigate}
@@ -146,6 +173,12 @@ export function DocsSearch({
                 ) : null}
               </Link>
             ))
+          ) : loadError ? (
+            <div className="px-3 py-4 text-sm text-slate-400">
+              Search could not be loaded. Focus the field to try again.
+            </div>
+          ) : records.length === 0 ? (
+            <div className="px-3 py-4 text-sm text-slate-400">Loading search…</div>
           ) : (
             <div className="px-3 py-4 text-sm text-slate-400">
               No results for <span className="text-slate-200">“{query.trim()}”</span>. Try a shorter or broader term.

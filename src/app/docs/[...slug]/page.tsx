@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { DocsArticle } from "@/components/docs";
 import { getDocPage, getDocSlugs } from "@/lib/docs";
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return getDocSlugs().map((slug) => ({
     slug: slug.split("/"),

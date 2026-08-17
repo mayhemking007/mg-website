@@ -293,6 +293,7 @@ function DocsNodes({
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             data-active={isActive ? "true" : undefined}
             onClick={onNavigate}
             style={{ paddingLeft: `${12 + depth * 12}px` }}
