@@ -107,7 +107,7 @@ export function Footer({ contained = false, githubUrl }: { contained?: boolean; 
           {githubUrl ? <a href={githubUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-emerald-200">GitHub</a> : null}
           <a href="https://www.npmjs.com/package/memo-grafter" target="_blank" rel="noreferrer" className="transition-colors hover:text-emerald-200">npm</a>
         </div>
-        <p className="footer-meta">MIT licensed · © {new Date().getFullYear()} MemoGrafter</p>
+        <p className="footer-meta">MIT licensed · © MemoGrafter</p>
       </div>
     </footer>
   );
